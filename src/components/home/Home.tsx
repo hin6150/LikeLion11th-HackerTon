@@ -2,7 +2,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { v4 as uuidv4 } from 'uuid';
-import { VideoContainer, VideoInfo } from './components';
+import { FilterTab, VideoContainer, VideoInfo } from './components';
 import theme from '../../styles/theme';
 
 const Home = () => {
@@ -14,6 +14,7 @@ const Home = () => {
         margin-bottom: 80px;
       `}
     >
+      <FilterTab></FilterTab>
       {repeatedVideos.map(() => {
         const uniqueKey = uuidv4();
         return (
