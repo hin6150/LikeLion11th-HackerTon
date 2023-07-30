@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react';
+import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import { v4 as uuidv4 } from 'uuid';
 import { FilterTab, VideoContainer, VideoInfo } from './components';
@@ -7,6 +7,7 @@ import theme from '../../styles/theme';
 
 const Home = () => {
   const repeatedVideos = Array.from({ length: 10 });
+  const [toggleFilter, setToggleFilter] = useState(true);
 
   return (
     <div
@@ -14,7 +15,7 @@ const Home = () => {
         margin-bottom: 80px;
       `}
     >
-      <FilterTab></FilterTab>
+      <FilterTab toggleFilter={toggleFilter} setToggleFilter={setToggleFilter} />
       {repeatedVideos.map(() => {
         const uniqueKey = uuidv4();
         return (

@@ -106,7 +106,7 @@ const FilterList = ({ title, describe }: { title: string; describe: string }) =>
       <p
         css={css`
           ${theme.Typography.Small2}
-          color: ${theme.Gray[500]}
+          color: ${theme.Gray[500]};
         `}
       >
         {describe}
@@ -126,11 +126,24 @@ const FilterList = ({ title, describe }: { title: string; describe: string }) =>
   );
 };
 
-export const FilterTab = () => {
+export const FilterTab = ({
+  toggleFilter,
+  setToggleFilter,
+}: {
+  toggleFilter: boolean;
+  setToggleFilter: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   return (
     <div
       css={css`
         text-align: left;
+        height: 100vh;
+        width: 100vw;
+        z-index: 100;
+        background-color: ${theme.Gray[100]};
+        position: fixed;
+        top: 0;
+        display: ${toggleFilter ? 'block' : 'none'};
       `}
     >
       <div
@@ -141,8 +154,14 @@ export const FilterTab = () => {
           align-items: center;
         `}
       >
-        <BsXLg />
-        <p>필터</p>
+        <BsXLg onClick={() => setToggleFilter(!toggleFilter)} />
+        <p
+          css={css`
+            ${theme.Typography.Small1}
+          `}
+        >
+          필터
+        </p>
       </div>
       <hr />
       <h2
