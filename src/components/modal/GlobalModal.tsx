@@ -1,16 +1,21 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeModal, selectModal } from '../../store/modalSlice';
-import { FilterTabModal, ModalContainer, Overlay } from './component';
+import { FilterTabModal, ModalContainer, Overlay, SearchTabModal } from './component';
 
 const MODAL_TYPES = {
   FilterTabModal: 'FilterTabModal',
+  SearchTabModal: 'SearchTabModal',
 };
 
 const MODAL_COMPONENTS = [
   {
     type: MODAL_TYPES.FilterTabModal,
     component: <FilterTabModal />,
+  },
+  {
+    type: MODAL_TYPES.SearchTabModal,
+    component: <SearchTabModal />,
   },
 ];
 

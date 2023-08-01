@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { BsXLg } from 'react-icons/bs';
+import { BsArrowLeft, BsSearch, BsSoundwave, BsXLg } from 'react-icons/bs';
 import theme from '../../styles/theme';
 import { closeModal } from '../../store/modalSlice';
 
@@ -139,6 +139,72 @@ export const FilterTabModal = () => {
       <FilterList title="10대 이하" describe="" />
       <FilterList title="20대 ~ 40대" describe="" />
       <FilterList title="50대 이상" describe="" />
+    </div>
+  );
+};
+
+export const SearchTabModal = () => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (event: any) => {
+    setInputValue(event.target.value);
+  };
+
+  const isValueExist = inputValue !== '';
+  const dispatch = useDispatch();
+  return (
+    <div
+      css={css`
+        position: fixed;
+        top: 0;
+        width: 100vw;
+        height: 64px;
+        padding: 16px;
+        display: flex;
+        gap: 1.6rem;
+        align-items: center;
+        background-color: ${theme.Gray[100]};
+      `}
+    >
+      <BsArrowLeft
+        css={css`
+          font-size: 3.2rem;
+        `}
+        onClick={() => {
+          dispatch(closeModal());
+        }}
+      />
+      <input
+        placeholder="검색어를 입력하세요."
+        type="text"
+        value={inputValue}
+        onChange={handleInputChange}
+        css={css`
+          flex: 1;
+          height: 32px;
+          background-color: ${theme.Gray[200]};
+          border-radius: 1.2rem;
+          ${theme.Typography.Small2}
+          padding-left: 1.6rem;
+          &::placeholder {
+            color: ${theme.Gray[500]};
+          }
+        `}
+      />
+
+      {isValueExist ? (
+        <BsSearch
+          css={css`
+            font-size: 2.8rem;
+          `}
+        />
+      ) : (
+        <BsSoundwave
+          css={css`
+            font-size: 3.2rem;
+          `}
+        />
+      )}
     </div>
   );
 };

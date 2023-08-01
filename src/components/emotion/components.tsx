@@ -42,6 +42,9 @@ export const Header = () => {
           css={css`
             font-size: 2.8rem;
           `}
+          onClick={() => {
+            dispatch(openModal({ modalType: 'SearchTabModal' }));
+          }}
         />
         <BsFilter
           css={css`
