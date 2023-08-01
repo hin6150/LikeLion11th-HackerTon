@@ -14,9 +14,12 @@ import {
   BsSearch,
 } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import theme from '../../styles/theme';
+import { openModal } from '../../store/modalSlice';
 
 export const Header = () => {
+  const dispatch = useDispatch();
   return (
     <div
       css={css`
@@ -44,6 +47,9 @@ export const Header = () => {
           css={css`
             font-size: 3.2rem;
           `}
+          onClick={() => {
+            dispatch(openModal({ modalType: 'FilterTabModal' }));
+          }}
         />
       </div>
     </div>
