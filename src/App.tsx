@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Home from './components/home/Home';
 import MyPage from './components/mypage/MyPage';
 import SignIn from './components/login/SignIn';
@@ -17,7 +17,8 @@ function App() {
       <BrowserRouter>
         <Header />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/home/*" element={<HomeDetail />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/upload" element={<Upload />} />

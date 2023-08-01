@@ -12,8 +12,9 @@ import {
   BsPlusCircle,
   BsPlusCircleFill,
   BsSearch,
+  BsSoundwave,
 } from 'react-icons/bs';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import theme from '../../styles/theme';
 import { openModal } from '../../store/modalSlice';
@@ -23,57 +24,135 @@ export const Header = () => {
   return (
     <div
       css={css`
+        position: fixed;
+        top: 0;
         width: 100%;
         background-color: ${theme.Gray[50]};
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.6rem;
+        z-index: 99;
       `}
     >
-      <img src="./img/logo.png" alt="logo"></img>
       <div
         css={css`
           display: flex;
-          gap: 1.6rem;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1.6rem;
+
+          @media screen and (min-width: 1366px) {
+            display: none;
+          }
         `}
       >
-        <BsSearch
+        <img src="./img/logo.png" alt="logo" />
+        <div
           css={css`
-            font-size: 2.8rem;
+            display: flex;
+            gap: 1.6rem;
           `}
-          onClick={() => {
-            dispatch(openModal({ modalType: 'SearchTabModal' }));
-          }}
-        />
-        <BsFilter
+        >
+          <BsSearch
+            css={css`
+              font-size: 2.8rem;
+            `}
+            onClick={() => {
+              dispatch(openModal({ modalType: 'SearchTabModal' }));
+            }}
+          />
+          <BsFilter
+            css={css`
+              font-size: 3.2rem;
+            `}
+            onClick={() => {
+              dispatch(openModal({ modalType: 'FilterTabModal' }));
+            }}
+          />
+        </div>
+      </div>
+      <div
+        css={css`
+          height: 8rem;
+          display: none;
+          padding: 1.6rem 2.4rem;
+          justify-content: space-between;
+          @media screen and (min-width: 1366px) {
+            display: flex;
+          }
+        `}
+      >
+        <div
           css={css`
-            font-size: 3.2rem;
+            display: flex;
+            align-items: center;
+            gap: 24px;
           `}
-          onClick={() => {
-            dispatch(openModal({ modalType: 'FilterTabModal' }));
-          }}
+        >
+          <BsFilter
+            css={css`
+              font-size: 3.2rem;
+            `}
+            onClick={() => {
+              dispatch(openModal({ modalType: 'FilterTabModal' }));
+            }}
+          />
+          <img src="./img/logo.png" alt="logo" />
+        </div>
+        <div
+          css={css`
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex: 1;
+            margin: 0 48px;
+          `}
+        >
+          <input
+            placeholder="검색어를 입력하세요."
+            css={css`
+              width: 100%;
+              height: 48px;
+              border-radius: 24px;
+              background-color: ${theme.Gray[200]};
+              padding-left: 24px;
+            `}
+          />
+          <BsSearch
+            css={css`
+              font-size: 28px;
+              right: 80px;
+              position: absolute;
+            `}
+          />
+          <BsSoundwave
+            css={css`
+              font-size: 32px;
+              margin-left: 24px;
+            `}
+          />
+        </div>
+        <div
+          css={css`
+            width: 48px;
+            height: 48px;
+            border-radius: 48px;
+            background-color: ${theme.Gray[400]};
+          `}
         />
       </div>
     </div>
   );
 };
 
-const FooterIcon = ({
-  type,
-  page,
-}: {
-  type: '홈' | '검색' | '업로드' | '마이페이지';
-  page: '홈' | '검색' | '업로드' | '마이페이지';
-}) => {
+const FooterIcon = ({ type }: { type: 'home' | 'chat' | 'upload' | 'mypage' }) => {
+  const location = useLocation();
+  const currentPathname = location.pathname.includes(type);
+
   const IconType: Record<string, [ReactNode, ReactNode]> = {
-    홈: [<BsHouseDoor />, <BsHouseDoorFill />],
-    검색: [<BsChatDots />, <BsChatDotsFill />],
-    업로드: [<BsPlusCircle />, <BsPlusCircleFill />],
-    마이페이지: [<BsPerson />, <BsPersonFill />],
+    home: [<BsHouseDoor />, <BsHouseDoorFill />],
+    chat: [<BsChatDots />, <BsChatDotsFill />],
+    upload: [<BsPlusCircle />, <BsPlusCircleFill />],
+    mypage: [<BsPerson />, <BsPersonFill />],
   };
-  const index = type === page ? 1 : 0;
-  const selectedIcon = IconType[type][index] || [null, null];
+  const selectedIcon = IconType[type][+currentPathname] || [null, null];
   return (
     <div
       css={css`
@@ -81,7 +160,7 @@ const FooterIcon = ({
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        color: ${index ? theme.Colors.Primary : theme.Gray[950]};
+        color: ${currentPathname ? theme.Colors.Primary : theme.Gray[950]};
       `}
     >
       <div
@@ -117,19 +196,33 @@ export const Footer = () => {
         justify-content: space-between;
         align-items: center;
         padding: 8px 32px;
+        @media screen and (min-width: 768px) {
+          justify-content: center;
+          gap: 6.4rem;
+        }
+        @media screen and (min-width: 1366px) {
+          margin-top: 8rem;
+          padding-top: 1.6rem;
+          flex-direction: column;
+          left: 0;
+          top: 0;
+          width: 8rem;
+          height: 100vh;
+          justify-content: start;
+        }
       `}
     >
-      <Link to="/">
-        <FooterIcon type="홈" page="홈" />
+      <Link to="/home">
+        <FooterIcon type="home" />
       </Link>
       <Link to="/chat">
-        <FooterIcon type="검색" page="홈" />
+        <FooterIcon type="chat" />
       </Link>
       <Link to="/upload">
-        <FooterIcon type="업로드" page="홈" />
+        <FooterIcon type="upload" />
       </Link>
-      <Link to="mypage">
-        <FooterIcon type="마이페이지" page="홈" />
+      <Link to="/mypage">
+        <FooterIcon type="mypage" />
       </Link>
     </div>
   );
