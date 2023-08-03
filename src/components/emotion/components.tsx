@@ -1,17 +1,183 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React from 'react';
+import React, { ReactNode } from 'react';
+import {
+  BsChatDots,
+  BsChatDotsFill,
+  BsFilter,
+  BsHouseDoor,
+  BsHouseDoorFill,
+  BsPerson,
+  BsPersonFill,
+  BsPlusCircle,
+  BsPlusCircleFill,
+  BsSearch,
+  BsSoundwave,
+} from 'react-icons/bs';
+import { Link, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import theme from '../../styles/theme';
+import { openModal } from '../../store/modalSlice';
 
 export const Header = () => {
+  const dispatch = useDispatch();
   return (
     <div
       css={css`
+        position: fixed;
+        top: 0;
         width: 100%;
         background-color: ${theme.Gray[50]};
+        z-index: 99;
       `}
     >
-      Header
+      <div
+        css={css`
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1.6rem;
+
+          @media screen and (min-width: 1366px) {
+            display: none;
+          }
+        `}
+      >
+        <img src="./img/logo.png" alt="logo" />
+        <div
+          css={css`
+            display: flex;
+            gap: 1.6rem;
+          `}
+        >
+          <BsSearch
+            css={css`
+              font-size: 2.8rem;
+            `}
+            onClick={() => {
+              dispatch(openModal({ modalType: 'SearchTabModal' }));
+            }}
+          />
+          <BsFilter
+            css={css`
+              font-size: 3.2rem;
+            `}
+            onClick={() => {
+              dispatch(openModal({ modalType: 'FilterTabModal' }));
+            }}
+          />
+        </div>
+      </div>
+      <div
+        css={css`
+          height: 8rem;
+          display: none;
+          padding: 1.6rem 2.4rem;
+          justify-content: space-between;
+          @media screen and (min-width: 1366px) {
+            display: flex;
+          }
+        `}
+      >
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+            gap: 24px;
+          `}
+        >
+          <BsFilter
+            css={css`
+              font-size: 3.2rem;
+            `}
+            onClick={() => {
+              dispatch(openModal({ modalType: 'FilterTabModal' }));
+            }}
+          />
+          <img src="./img/logo.png" alt="logo" />
+        </div>
+        <div
+          css={css`
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex: 1;
+            margin: 0 48px;
+          `}
+        >
+          <input
+            placeholder="검색어를 입력하세요."
+            css={css`
+              width: 100%;
+              height: 48px;
+              border-radius: 24px;
+              background-color: ${theme.Gray[200]};
+              padding-left: 24px;
+            `}
+          />
+          <BsSearch
+            css={css`
+              font-size: 28px;
+              right: 80px;
+              position: absolute;
+            `}
+          />
+          <BsSoundwave
+            css={css`
+              font-size: 32px;
+              margin-left: 24px;
+            `}
+          />
+        </div>
+        <div
+          css={css`
+            width: 48px;
+            height: 48px;
+            border-radius: 48px;
+            background-color: ${theme.Gray[400]};
+          `}
+        />
+      </div>
+    </div>
+  );
+};
+
+const FooterIcon = ({ type }: { type: 'home' | 'chat' | 'upload' | 'mypage' }) => {
+  const location = useLocation();
+  const currentPathname = location.pathname.includes(type);
+
+  const IconType: Record<string, [ReactNode, ReactNode]> = {
+    home: [<BsHouseDoor />, <BsHouseDoorFill />],
+    chat: [<BsChatDots />, <BsChatDotsFill />],
+    upload: [<BsPlusCircle />, <BsPlusCircleFill />],
+    mypage: [<BsPerson />, <BsPersonFill />],
+  };
+  const selectedIcon = IconType[type][+currentPathname] || [null, null];
+  return (
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: ${currentPathname ? theme.Colors.Primary : theme.Gray[950]};
+      `}
+    >
+      <div
+        css={css`
+          font-size: 32px;
+        `}
+      >
+        {selectedIcon}
+      </div>
+      <p
+        css={css`
+          width: 56px;
+          ${theme.Typography.Small2};
+        `}
+      >
+        {type}
+      </p>
     </div>
   );
 };
@@ -20,11 +186,44 @@ export const Footer = () => {
   return (
     <div
       css={css`
-        width: 100%;
+        position: fixed;
+        z-index: 99;
+        bottom: 0;
+        right: 0;
+        width: 100vw;
         background-color: ${theme.Gray[50]};
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 32px;
+        @media screen and (min-width: 768px) {
+          justify-content: center;
+          gap: 6.4rem;
+        }
+        @media screen and (min-width: 1366px) {
+          margin-top: 8rem;
+          padding-top: 1.6rem;
+          flex-direction: column;
+          left: 0;
+          top: 0;
+          width: 8rem;
+          height: 100vh;
+          justify-content: start;
+        }
       `}
     >
-      Footer
+      <Link to="/home">
+        <FooterIcon type="home" />
+      </Link>
+      <Link to="/chat">
+        <FooterIcon type="chat" />
+      </Link>
+      <Link to="/upload">
+        <FooterIcon type="upload" />
+      </Link>
+      <Link to="/mypage">
+        <FooterIcon type="mypage" />
+      </Link>
     </div>
   );
 };

@@ -15,7 +15,7 @@ declare module '@emotion/react' {
       PreTitle: { fontSize: '12px'; letterSpacing: '2%'; fontWeight: '700' };
       ButtonText: { fontSize: '16px'; letterSpacing: '3%'; fontWeight: '700' };
     };
-    Colors: {};
+    Colors: { Primary: '#5CADFF' };
     Gray: {
       50: '#F9FAFB';
       100: '#F3F4F6';
