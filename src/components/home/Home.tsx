@@ -13,12 +13,10 @@ const Home = () => {
       css={css`
         display: grid;
         grid-template-columns: 1fr;
-        margin-bottom: 80px;
         grid-gap: 1.6rem;
         @media screen and (min-width: 768px) {
           grid-template-columns: repeat(2, 1fr);
           margin: 1.6rem;
-          margin-bottom: 8rem;
         }
         @media screen and (min-width: 1366px) {
           grid-template-columns: repeat(4, 1fr);
