@@ -21,6 +21,9 @@ import { openModal } from '../../store/modalSlice';
 
 export const Header = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const currentPathname = location.pathname;
+
   return (
     <div
       css={css`
@@ -29,6 +32,9 @@ export const Header = () => {
         width: 100%;
         background-color: ${theme.Gray[50]};
         z-index: 99;
+        @media screen and (min-width: 1366px) {
+          margin-left: -8rem;
+        }
       `}
     >
       <div
@@ -61,6 +67,7 @@ export const Header = () => {
           <BsFilter
             css={css`
               font-size: 3.2rem;
+              display: ${currentPathname === '/home' ? 'block' : 'none'};
             `}
             onClick={() => {
               dispatch(openModal({ modalType: 'FilterTabModal' }));
@@ -89,6 +96,7 @@ export const Header = () => {
           <BsFilter
             css={css`
               font-size: 3.2rem;
+              display: ${currentPathname === '/home' ? 'block' : 'none'};
             `}
             onClick={() => {
               dispatch(openModal({ modalType: 'FilterTabModal' }));
