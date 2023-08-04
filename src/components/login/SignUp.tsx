@@ -2,8 +2,9 @@
 import { css } from '@emotion/react';
 import React, { useState } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
+import { Link } from 'react-router-dom';
 import theme from '../../styles/theme';
-import { ButtonBox, InputBox } from './components';
+import { ButtonBox, InputBox, LoginContainer } from './components';
 
 const SingUp = () => {
   const [sentEmail, setSentEmail] = useState(false);
@@ -18,23 +19,17 @@ const SingUp = () => {
         height: 100%;
       `}
     >
-      <BsArrowLeft
-        css={css`
-          position: absolute;
-          top: 0;
-          left: 1.6rem;
-          font-size: 3.2rem;
-        `}
-      />
-      <div
-        css={css`
-          display: flex;
-          flex-direction: column;
-          gap: 1.6rem;
-          width: 100%;
-          padding: 0 1.6rem;
-        `}
-      >
+      <Link to="/signin">
+        <BsArrowLeft
+          css={css`
+            position: absolute;
+            top: 0;
+            left: 1.6rem;
+            font-size: 3.2rem;
+          `}
+        />
+      </Link>
+      <LoginContainer>
         <h2
           css={css`
             ${theme.Typography.Header1}
@@ -86,7 +81,7 @@ const SingUp = () => {
           <p>개인정보 수집 및 이용에 동의합니다</p>
         </div>
         <ButtonBox text="회원가입" />
-      </div>
+      </LoginContainer>
     </div>
   );
 };

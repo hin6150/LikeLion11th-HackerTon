@@ -2,8 +2,9 @@
 import { css } from '@emotion/react';
 import React from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
+import { Link } from 'react-router-dom';
 import theme from '../../styles/theme';
-import { ButtonBox, InputBox } from './components';
+import { ButtonBox, InputBox, LoginContainer } from './components';
 
 const SignIn = () => {
   return (
@@ -25,15 +26,7 @@ const SignIn = () => {
           font-size: 3.2rem;
         `}
       />
-      <div
-        css={css`
-          display: flex;
-          flex-direction: column;
-          gap: 1.6rem;
-          width: 100%;
-          padding: 0 1.6rem;
-        `}
-      >
+      <LoginContainer>
         <h2
           css={css`
             ${theme.Typography.Header1}
@@ -69,16 +62,18 @@ const SignIn = () => {
             margin-top: 1.6rem;
           `}
         >
-          아이디가 없으신가요?{' '}
-          <span
-            css={css`
-              color: ${theme.Colors.Primary};
-            `}
-          >
-            회원가입하기
-          </span>
+          아이디가 없으신가요?
+          <Link to="/signup">
+            <span
+              css={css`
+                color: ${theme.Colors.Primary};
+              `}
+            >
+              회원가입하기
+            </span>
+          </Link>
         </p>
-      </div>
+      </LoginContainer>
     </div>
   );
 };

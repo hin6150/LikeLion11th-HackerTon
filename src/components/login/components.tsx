@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import theme from '../../styles/theme';
 
 export const ButtonBox = ({ color, text }: { color?: string; text: string }) => {
@@ -35,5 +35,27 @@ export const InputBox = ({ placeholder }: { placeholder: string }) => {
         border-radius: 0.8rem;
       `}
     />
+  );
+};
+
+export const LoginContainer = ({ children }: { children: ReactNode }) => {
+  return (
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        gap: 1.6rem;
+        width: 100%;
+        padding: 0 1.6rem;
+        @media screen and (min-width: 768px) {
+          width: 80%;
+        }
+        @media screen and (min-width: 1366px) {
+          width: 50%;
+        }
+      `}
+    >
+      {children}
+    </div>
   );
 };
