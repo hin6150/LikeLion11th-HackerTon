@@ -1,6 +1,12 @@
 .App {
-  padding-top: 80px;
+  padding-top: 8rem;
   text-align: center;
+  height: 100vh;
+}
+@media screen and (min-width: 1366px) {
+  .App {
+    padding-left: 8rem;
+  }
 }
 
 .App-logo {
