@@ -4,6 +4,7 @@ import React, { ReactNode } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import theme from '../../styles/theme';
+import { ContainerType, VideoInfoType } from '../../types/type';
 
 export const VideoContainer = ({ children, id }: { children: ReactNode; id: string }) => {
   const navigate = useNavigate();
@@ -12,8 +13,8 @@ export const VideoContainer = ({ children, id }: { children: ReactNode; id: stri
       css={css`
         display: flex;
         flex-direction: column;
-        gap: 16px;
-        margin-bottom: 16px;
+        gap: 1.6rem;
+        margin-bottom: 1.6rem;
       `}
       onClick={() => {
         navigate(`/home/${id}`);
@@ -24,12 +25,7 @@ export const VideoContainer = ({ children, id }: { children: ReactNode; id: stri
     </div>
   );
 };
-interface VideoInfoType {
-  title: string;
-  author: string;
-  view: number;
-  uploadDate: Date;
-}
+
 export const VideoInfo = ({ title, author, view, uploadDate }: VideoInfoType) => {
   // 현재 시간을 Date 객체로 얻기
   const currentTime = new Date();
@@ -51,15 +47,15 @@ ${minutesDifference}분 전`;
       css={css`
         position: relative;
         display: flex;
-        gap: 16px;
-        padding: 0 8px;
+        gap: 1.6rem;
+        padding: 0 0.8rem;
       `}
     >
       <div
         css={css`
-          width: 48px;
-          height: 48px;
-          border-radius: 48px;
+          width: 4.8rem;
+          height: 4.8rem;
+          border-radius: 4.8rem;
           background-color: ${theme.Gray[500]};
         `}
       />
@@ -84,10 +80,48 @@ ${minutesDifference}분 전`;
       <BsThreeDotsVertical
         css={css`
           position: absolute;
-          right: 8px;
+          right: 0.8rem;
           top: 0;
         `}
       />
+    </div>
+  );
+};
+
+export const VideoFrame = () => {
+  return (
+    <div
+      css={css`
+        width: 100%;
+        height: 24rem;
+        background-color: ${theme.Gray[400]};
+        @media screen and (min-width: 768px) {
+          border-radius: 2rem;
+        }
+      `}
+    />
+  );
+};
+
+export const HomeGridContainer = ({ children }: ContainerType) => {
+  return (
+    <div
+      css={css`
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-gap: 1.6rem;
+        padding-bottom: 8rem;
+        @media screen and (min-width: 768px) {
+          grid-template-columns: repeat(2, 1fr);
+          margin: 1.6rem;
+        }
+        @media screen and (min-width: 1366px) {
+          grid-template-columns: repeat(4, 1fr);
+          padding-bottom: 0;
+        }
+      `}
+    >
+      {children}
     </div>
   );
 };

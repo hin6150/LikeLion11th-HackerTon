@@ -2,8 +2,32 @@
 import { css } from '@emotion/react';
 import React, { ReactNode } from 'react';
 import theme from '../../styles/theme';
+import { ContainerType } from '../../types/type';
 
-export const ButtonBox = ({ color, text }: { color?: string; text: string }) => {
+export const LoginLayout = ({ children }: ContainerType) => {
+  return (
+    <div
+      css={css`
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      `}
+    >
+      {children}
+    </div>
+  );
+};
+export const ButtonBox = ({
+  color,
+  text,
+  onClick,
+}: {
+  color?: string;
+  text: string;
+  onClick?: () => void;
+}) => {
   return (
     <button
       type="button"
@@ -14,6 +38,7 @@ export const ButtonBox = ({ color, text }: { color?: string; text: string }) => 
         border-radius: 0.8rem;
         ${theme.Typography.ButtonText}
       `}
+      onClick={onClick}
     >
       {text}
     </button>
@@ -22,6 +47,7 @@ export const ButtonBox = ({ color, text }: { color?: string; text: string }) => 
 
 ButtonBox.defaultProps = {
   color: `${theme.Colors.Primary}`,
+  onClick: () => {},
 };
 
 export const InputBox = ({ placeholder }: { placeholder: string }) => {
