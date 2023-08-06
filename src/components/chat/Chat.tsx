@@ -1,76 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { BsSend } from 'react-icons/bs';
 import theme from '../../styles/theme';
-
-const ChatBox = ({ type, children }: { type: 'gpt' | 'user'; children: ReactNode }) => {
-  return (
-    <div
-      css={css`
-        background-color: ${type === 'user' ? theme.Colors.Primary : theme.Gray[200]};
-        padding: 1.6rem;
-        max-width: 80%;
-        text-align: start;
-        border-radius: 1.6rem;
-        align-self: ${type === 'user' ? 'flex-end' : 'flex-start'};
-        ${theme.Typography.Small2}
-        @media screen and (min-width: 768px) {
-          ${theme.Typography.Body2};
-          max-width: 65%;
-        }
-        @media screen and (min-width: 1366px) {
-          border-radius: 3.2rem;
-          padding: 1.6rem 3.2rem;
-          ${theme.Typography.Body1};
-        }
-      `}
-    >
-      <p>{children}</p>
-    </div>
-  );
-};
-
-const ChatImageBox = () => {
-  return (
-    <div
-      css={css`
-        background-color: ${theme.Gray[200]};
-        max-width: 80%;
-        text-align: start;
-        border-radius: 1.6rem;
-        ${theme.Typography.PreTitle};
-        @media screen and (min-width: 768px) {
-          ${theme.Typography.Body2};
-          max-width: 65%;
-        }
-        @media screen and (min-width: 1366px) {
-          border-radius: 3.2rem;
-          ${theme.Typography.Body1};
-        }
-      `}
-    >
-      <div
-        css={css`
-          width: 100%;
-          height: 30vw;
-          border-radius: 16px 16px 0px 0px;
-          background-color: ${theme.Gray[400]};
-        `}
-      />
-      <p
-        css={css`
-          padding: 0.8rem 1.6rem;
-          @media screen and (min-width: 1366px) {
-            padding: 1.6rem 3.2rem;
-          }
-        `}
-      >
-        지금 바로 떠나요, 일본 여행 A부터 Z까지
-      </p>
-    </div>
-  );
-};
+import { ChatBox, ChatImageBox, ChatInputContainer } from './components';
 
 const Chat = () => {
   return (
@@ -119,25 +52,7 @@ const Chat = () => {
           안녕하세요! 당신의 검색을 도와드리는 OOO 입니다! <br /> 무엇을 찾아보고 싶나요?
         </ChatBox>
       </div>
-      <div
-        css={css`
-          width: 100%;
-          position: fixed;
-          bottom: 8rem;
-          left: 0;
-          display: flex;
-          align-items: center;
-          gap: 1.6rem;
-          padding: 0.8rem 1.6rem;
-          ${theme.Typography.Small2}
-
-          @media screen and (min-width: 1366px) {
-            bottom: 2.4rem;
-            padding-left: 8rem;
-            ${theme.Typography.Body1}
-          }
-        `}
-      >
+      <ChatInputContainer>
         <button
           type="button"
           css={css`
@@ -151,7 +66,7 @@ const Chat = () => {
             }
           `}
         >
-          <p>서비스설명</p>
+          서비스설명
         </button>
         <input
           placeholder="챗봇에게 질문하기"
@@ -178,7 +93,7 @@ const Chat = () => {
             }
           `}
         />
-      </div>
+      </ChatInputContainer>
     </div>
   );
 };

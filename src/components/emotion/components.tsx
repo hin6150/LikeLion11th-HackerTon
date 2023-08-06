@@ -18,9 +18,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import theme from '../../styles/theme';
 import { openModal } from '../../store/modalSlice';
+import { ContainerType } from '../../types/type';
 
-export const Header = () => {
-  const dispatch = useDispatch();
+const HeaderContainer = ({ children }: ContainerType) => {
   return (
     <div
       css={css`
@@ -29,20 +29,108 @@ export const Header = () => {
         width: 100%;
         background-color: ${theme.Gray[50]};
         z-index: 99;
+        @media screen and (min-width: 1366px) {
+          margin-left: -8rem;
+        }
       `}
     >
-      <div
-        css={css`
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 1.6rem;
+      {children}
+    </div>
+  );
+};
+const HeaderMobile = ({ children }: ContainerType) => {
+  return (
+    <div
+      css={css`
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.6rem;
 
-          @media screen and (min-width: 1366px) {
-            display: none;
-          }
+        @media screen and (min-width: 1366px) {
+          display: none;
+        }
+      `}
+    >
+      {children}
+    </div>
+  );
+};
+const HeaderWeb = ({ children }: ContainerType) => {
+  return (
+    <div
+      css={css`
+        height: 8rem;
+        display: none;
+        padding: 1.6rem 2.4rem;
+        justify-content: space-between;
+        @media screen and (min-width: 1366px) {
+          display: flex;
+        }
+      `}
+    >
+      {children}
+    </div>
+  );
+};
+const HeaderWebInputBox = () => {
+  return (
+    <div
+      css={css`
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex: 1;
+        margin: 0 48px;
+      `}
+    >
+      <input
+        placeholder="검색어를 입력하세요."
+        css={css`
+          width: 100%;
+          height: 48px;
+          border-radius: 24px;
+          background-color: ${theme.Gray[200]};
+          padding-left: 24px;
         `}
-      >
+      />
+      <BsSearch
+        css={css`
+          font-size: 28px;
+          right: 80px;
+          position: absolute;
+        `}
+      />
+      <BsSoundwave
+        css={css`
+          font-size: 32px;
+          margin-left: 24px;
+        `}
+      />
+    </div>
+  );
+};
+const UserIcon = () => {
+  return (
+    <div
+      css={css`
+        width: 48px;
+        height: 48px;
+        border-radius: 48px;
+        background-color: ${theme.Gray[400]};
+      `}
+    />
+  );
+};
+
+export const Header = () => {
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const currentPathname = location.pathname;
+
+  return (
+    <HeaderContainer>
+      <HeaderMobile>
         <img src="./img/logo.png" alt="logo" />
         <div
           css={css`
@@ -61,24 +149,16 @@ export const Header = () => {
           <BsFilter
             css={css`
               font-size: 3.2rem;
+              display: ${currentPathname === '/home' ? 'block' : 'none'};
             `}
             onClick={() => {
               dispatch(openModal({ modalType: 'FilterTabModal' }));
             }}
           />
         </div>
-      </div>
-      <div
-        css={css`
-          height: 8rem;
-          display: none;
-          padding: 1.6rem 2.4rem;
-          justify-content: space-between;
-          @media screen and (min-width: 1366px) {
-            display: flex;
-          }
-        `}
-      >
+      </HeaderMobile>
+
+      <HeaderWeb>
         <div
           css={css`
             display: flex;
@@ -89,6 +169,7 @@ export const Header = () => {
           <BsFilter
             css={css`
               font-size: 3.2rem;
+              display: ${currentPathname === '/home' ? 'block' : 'none'};
             `}
             onClick={() => {
               dispatch(openModal({ modalType: 'FilterTabModal' }));
@@ -96,49 +177,14 @@ export const Header = () => {
           />
           <img src="./img/logo.png" alt="logo" />
         </div>
-        <div
-          css={css`
-            position: relative;
-            display: flex;
-            align-items: center;
-            flex: 1;
-            margin: 0 48px;
-          `}
-        >
-          <input
-            placeholder="검색어를 입력하세요."
-            css={css`
-              width: 100%;
-              height: 48px;
-              border-radius: 24px;
-              background-color: ${theme.Gray[200]};
-              padding-left: 24px;
-            `}
-          />
-          <BsSearch
-            css={css`
-              font-size: 28px;
-              right: 80px;
-              position: absolute;
-            `}
-          />
-          <BsSoundwave
-            css={css`
-              font-size: 32px;
-              margin-left: 24px;
-            `}
-          />
-        </div>
-        <div
-          css={css`
-            width: 48px;
-            height: 48px;
-            border-radius: 48px;
-            background-color: ${theme.Gray[400]};
-          `}
-        />
-      </div>
-    </div>
+
+        <HeaderWebInputBox />
+
+        <Link to="/mypage">
+          <UserIcon />
+        </Link>
+      </HeaderWeb>
+    </HeaderContainer>
   );
 };
 
@@ -152,7 +198,9 @@ const FooterIcon = ({ type }: { type: 'home' | 'chat' | 'upload' | 'mypage' }) =
     upload: [<BsPlusCircle />, <BsPlusCircleFill />],
     mypage: [<BsPerson />, <BsPersonFill />],
   };
+
   const selectedIcon = IconType[type][+currentPathname] || [null, null];
+
   return (
     <div
       css={css`
@@ -161,15 +209,10 @@ const FooterIcon = ({ type }: { type: 'home' | 'chat' | 'upload' | 'mypage' }) =
         justify-content: center;
         align-items: center;
         color: ${currentPathname ? theme.Colors.Primary : theme.Gray[950]};
+        font-size: 32px;
       `}
     >
-      <div
-        css={css`
-          font-size: 32px;
-        `}
-      >
-        {selectedIcon}
-      </div>
+      <div>{selectedIcon}</div>
       <p
         css={css`
           width: 56px;
