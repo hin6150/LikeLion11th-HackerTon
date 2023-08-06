@@ -2,9 +2,11 @@
 import { css } from '@emotion/react';
 import React, { ReactNode } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 import theme from '../../styles/theme';
 
-export const VideoContainer = ({ children }: { children: ReactNode }) => {
+export const VideoContainer = ({ children, id }: { children: ReactNode; id: string }) => {
+  const navigate = useNavigate();
   return (
     <div
       css={css`
@@ -13,6 +15,10 @@ export const VideoContainer = ({ children }: { children: ReactNode }) => {
         gap: 16px;
         margin-bottom: 16px;
       `}
+      onClick={() => {
+        navigate(`/home/${id}`);
+      }}
+      role="presentation"
     >
       {children}
     </div>

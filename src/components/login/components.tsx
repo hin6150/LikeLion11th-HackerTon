@@ -8,6 +8,7 @@ export const ButtonBox = ({ color, text }: { color?: string; text: string }) => 
     <button
       type="button"
       css={css`
+        width: 100%;
         padding: 1.6rem;
         background-color: ${color};
         border-radius: 0.8rem;

@@ -2,11 +2,15 @@
 import { css } from '@emotion/react';
 import React from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import theme from '../../styles/theme';
 import { ButtonBox, InputBox, LoginContainer } from './components';
+import { setUser } from '../../store/userSlice';
 
 const SignIn = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   return (
     <div
       css={css`
@@ -54,7 +58,15 @@ const SignIn = () => {
           />
           <p>로그인 상태 유지</p>
         </div>
-        <ButtonBox text="로그인" />
+        <div
+          role="presentation"
+          onClick={() => {
+            dispatch(setUser({ user: 'test0001', token: 'jwt' }));
+            navigate(`/mypage/test0001`);
+          }}
+        >
+          <ButtonBox text="로그인" />
+        </div>
         <ButtonBox color="#f9e000" text="카카오로 로그인" />
         <p
           css={css`

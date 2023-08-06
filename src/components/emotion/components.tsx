@@ -137,14 +137,16 @@ export const Header = () => {
             `}
           />
         </div>
-        <div
-          css={css`
-            width: 48px;
-            height: 48px;
-            border-radius: 48px;
-            background-color: ${theme.Gray[400]};
-          `}
-        />
+        <Link to="/mypage">
+          <div
+            css={css`
+              width: 48px;
+              height: 48px;
+              border-radius: 48px;
+              background-color: ${theme.Gray[400]};
+            `}
+          />
+        </Link>
       </div>
     </div>
   );

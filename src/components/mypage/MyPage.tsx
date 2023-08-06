@@ -2,15 +2,26 @@
 import { css } from '@emotion/react';
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { useSelector } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
 import theme from '../../styles/theme';
 import { MyPageVideoComponent } from './components';
 import { VideoContainer, VideoInfo } from '../home/components';
+import { selectUser } from '../../store/userSlice';
 
 const MyPage = () => {
+  const { token, user } = useSelector(selectUser);
+  const navigate = useNavigate();
+
   const [isWeb, setIsWeb] = useState(window.innerWidth <= 1366);
   const repeatedVideos = Array.from({ length: 20 });
 
   useEffect(() => {
+    if (token === '') {
+      navigate('/signin');
+    } else {
+      navigate(`/mypage/${user}`);
+    }
     const handleResize = () => {
       setIsWeb(window.innerWidth <= 1366);
     };
@@ -20,7 +31,7 @@ const MyPage = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [navigate]);
   return (
     <div
       css={css`
@@ -85,14 +96,16 @@ const MyPage = () => {
         `}
       >
         <p>업로드한 동영상 강의</p>
-        <p
-          css={css`
-            ${theme.Typography.PreTitle}
-            color: ${theme.Colors.Primary};
-          `}
-        >
-          상세보기
-        </p>
+        <Link to="/mypage/detail">
+          <p
+            css={css`
+              ${theme.Typography.PreTitle}
+              color: ${theme.Colors.Primary};
+            `}
+          >
+            상세보기
+          </p>
+        </Link>
       </div>
       {isWeb ? (
         <div
@@ -126,7 +139,7 @@ const MyPage = () => {
           {repeatedVideos.map(() => {
             const uniqueKey = uuidv4();
             return (
-              <VideoContainer key={uniqueKey}>
+              <VideoContainer key={uniqueKey} id={uniqueKey}>
                 <div
                   css={css`
                     width: 100%;

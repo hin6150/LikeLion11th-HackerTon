@@ -88,6 +88,10 @@ export const FilterTabModal = () => {
         background-color: ${theme.Gray[100]};
         position: fixed;
         top: 0;
+        @media screen and (min-width: 1366px) {
+          width: 40%;
+          left: 0;
+        }
       `}
     >
       <div
