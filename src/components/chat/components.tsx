@@ -9,6 +9,7 @@ export const ChatBox = ({ type, children }: { type: 'gpt' | 'user'; children: Re
     <div
       css={css`
         background-color: ${type === 'user' ? theme.Colors.Primary : theme.Gray[200]};
+        color: ${type === 'user' ? theme.Gray[50] : theme.Gray[950]};
         padding: 1.6rem;
         max-width: 80%;
         text-align: start;

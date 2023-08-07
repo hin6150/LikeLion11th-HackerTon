@@ -3,19 +3,20 @@ import '@emotion/react';
 declare module '@emotion/react' {
   export interface DefaultTheme {
     Typography: {
-      Title: { fontSize: '64px'; letterSpacing: '-2%'; fontWeight: '700' };
-      Header1: { fontSize: '40px'; letterSpacing: '-2%'; fontWeight: '700' };
-      Header2: { fontSize: '24px'; letterSpacing: '-2%'; fontWeight: '700' };
-      Header3: { fontSize: '20px'; letterSpacing: '-2%'; fontWeight: '700' };
-      Body1: { fontSize: '20px'; fontWeight: '400' };
-      Body2: { fontSize: '16px'; fontWeight: '400' };
-      Small1: { fontSize: '14px'; fontWeight: '400' };
-      Small2: { fontSize: '12px'; fontWeight: '400' };
-      Small3: { fontSize: '10px'; fontWeight: '400' };
-      PreTitle: { fontSize: '12px'; letterSpacing: '2%'; fontWeight: '700' };
-      ButtonText: { fontSize: '16px'; letterSpacing: '3%'; fontWeight: '700' };
+      Title: { fontSize: '6.4rem'; letterSpacing: '-2%'; fontWeight: '700' };
+      Header1: { fontSize: '4.0rem'; letterSpacing: '-2%'; fontWeight: '700' };
+      Header2: { fontSize: '2.4rem'; letterSpacing: '-2%'; fontWeight: '700' };
+      Header3: { fontSize: '2.0rem'; letterSpacing: '-2%'; fontWeight: '700' };
+      Body1: { fontSize: '2.0rem'; letterSpacing: '-2%'; fontWeight: '400' };
+      Body2: { fontSize: '1.8rem'; letterSpacing: '-2%'; fontWeight: '400' };
+      SubTitle: { fontSize: '1.8rem'; letterSpacing: '-2%'; fontWeight: '700' };
+      Small1: { fontSize: '1.6rem'; fontWeight: '400' };
+      Small2: { fontSize: '1.4rem'; fontWeight: '400' };
+      Small3: { fontSize: '1.2rem'; fontWeight: '400' };
+      PreTitle: { fontSize: '1.4rem'; letterSpacing: '2%'; fontWeight: '700' };
+      ButtonText: { fontSize: '1.6rem'; letterSpacing: '3%'; fontWeight: '700' };
     };
-    Colors: { Primary: '#5CADFF' };
+    Colors: { Primary: '#4622E7' };
     Gray: {
       50: '#F9FAFB';
       100: '#F3F4F6';

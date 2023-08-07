@@ -51,8 +51,7 @@ const SignIn = () => {
             navigate(`/mypage/test0001`);
           }}
         />
-        <ButtonBox color="#f9e000" text="카카오로 로그인" />
-
+        <ButtonBox textColor="#3A1D1D" color="#f9e000" text="카카오로 로그인" />
         <p
           css={css`
             ${theme.Typography.ButtonText}

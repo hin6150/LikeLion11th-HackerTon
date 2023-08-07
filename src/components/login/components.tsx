@@ -21,10 +21,12 @@ export const LoginLayout = ({ children }: ContainerType) => {
 };
 export const ButtonBox = ({
   color,
+  textColor,
   text,
   onClick,
 }: {
   color?: string;
+  textColor?: string;
   text: string;
   onClick?: () => void;
 }) => {
@@ -37,6 +39,7 @@ export const ButtonBox = ({
         background-color: ${color};
         border-radius: 0.8rem;
         ${theme.Typography.ButtonText}
+        color: ${textColor}
       `}
       onClick={onClick}
     >
@@ -47,6 +50,7 @@ export const ButtonBox = ({
 
 ButtonBox.defaultProps = {
   color: `${theme.Colors.Primary}`,
+  textColor: `${theme.Gray[50]}`,
   onClick: () => {},
 };
 
