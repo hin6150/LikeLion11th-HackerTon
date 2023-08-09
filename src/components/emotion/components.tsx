@@ -7,6 +7,7 @@ import {
   BsFilter,
   BsHouseDoor,
   BsHouseDoorFill,
+  BsList,
   BsPerson,
   BsPersonFill,
   BsPlusCircle,
@@ -153,6 +154,15 @@ export const Header = () => {
             `}
             onClick={() => {
               dispatch(openModal({ modalType: 'FilterTabModal' }));
+            }}
+          />
+          <BsList
+            css={css`
+              font-size: 3.2rem;
+              display: ${currentPathname === '/chat' ? 'block' : 'none'};
+            `}
+            onClick={() => {
+              dispatch(openModal({ modalType: 'HistoryTabModal' }));
             }}
           />
         </div>
