@@ -1,11 +1,18 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeModal, selectModal } from '../../store/modalSlice';
-import { FilterTabModal, ModalContainer, Overlay, SearchTabModal } from './component';
+import {
+  FilterTabModal,
+  HistoryTabModal,
+  ModalContainer,
+  Overlay,
+  SearchTabModal,
+} from './component';
 
 const MODAL_TYPES = {
   FilterTabModal: 'FilterTabModal',
   SearchTabModal: 'SearchTabModal',
+  HistoryTabModal: 'HistoryTabModal',
 };
 
 const MODAL_COMPONENTS = [
@@ -16,6 +23,10 @@ const MODAL_COMPONENTS = [
   {
     type: MODAL_TYPES.SearchTabModal,
     component: <SearchTabModal />,
+  },
+  {
+    type: MODAL_TYPES.HistoryTabModal,
+    component: <HistoryTabModal />,
   },
 ];
 

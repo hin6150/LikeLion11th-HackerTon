@@ -2,9 +2,10 @@
 import { css } from '@emotion/react';
 import React, { ReactNode, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { BsArrowLeft, BsSearch, BsSoundwave, BsXLg } from 'react-icons/bs';
+import { BsArrowLeft, BsChat, BsSearch, BsSoundwave, BsXLg } from 'react-icons/bs';
 import theme from '../../styles/theme';
 import { closeModal } from '../../store/modalSlice';
+import { ContainerType } from '../../types/type';
 
 export const ModalContainer = ({ children }: { children: ReactNode }) => {
   return (
@@ -41,7 +42,6 @@ const FilterList = ({ title, describe }: { title: string; describe: string }) =>
     <div
       css={css`
         position: relative;
-        text-align: left;
         margin: 16px;
       `}
     >
@@ -76,8 +76,7 @@ const FilterList = ({ title, describe }: { title: string; describe: string }) =>
   );
 };
 
-export const FilterTabModal = () => {
-  const dispatch = useDispatch();
+const TabContainer = ({ children }: ContainerType) => {
   return (
     <div
       css={css`
@@ -88,29 +87,49 @@ export const FilterTabModal = () => {
         background-color: ${theme.Gray[100]};
         position: fixed;
         top: 0;
+        @media screen and (min-width: 768px) {
+          width: 60%;
+          right: 0;
+        }
         @media screen and (min-width: 1366px) {
           width: 40%;
           left: 0;
         }
       `}
     >
-      <div
+      {children}
+    </div>
+  );
+};
+
+const UpperBar = ({ title }: { title: string }) => {
+  const dispatch = useDispatch();
+
+  return (
+    <div
+      css={css`
+        display: flex;
+        padding: 16px;
+        gap: 16px;
+        align-items: center;
+      `}
+    >
+      <BsXLg onClick={() => dispatch(closeModal())} />
+      <p
         css={css`
-          display: flex;
-          padding: 16px;
-          gap: 16px;
-          align-items: center;
+          ${theme.Typography.Small1}
         `}
       >
-        <BsXLg onClick={() => dispatch(closeModal())} />
-        <p
-          css={css`
-            ${theme.Typography.Small1}
-          `}
-        >
-          필터
-        </p>
-      </div>
+        {title}
+      </p>
+    </div>
+  );
+};
+
+export const FilterTabModal = () => {
+  return (
+    <TabContainer>
+      <UpperBar title="필터" />
       <hr />
       <h2
         css={css`
@@ -142,8 +161,8 @@ export const FilterTabModal = () => {
       </h2>
       <FilterList title="10대 이하" describe="" />
       <FilterList title="20대 ~ 40대" describe="" />
-      <FilterList title="50대 이상" describe="" />
-    </div>
+      <FilterList title="50대 이상" describe="" />/
+    </TabContainer>
   );
 };
 
@@ -210,5 +229,78 @@ export const SearchTabModal = () => {
         />
       )}
     </div>
+  );
+};
+
+const ChatList = ({ title }: { title: string }) => {
+  return (
+    <div
+      css={css`
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      `}
+    >
+      <BsChat />
+      <p>{title}</p>
+    </div>
+  );
+};
+
+export const HistoryTabModal = () => {
+  return (
+    <TabContainer>
+      <UpperBar title="채팅 기록" />
+      <hr />
+      <div
+        css={css`
+          width: 100%;
+          padding: 0.8rem 1.6rem;
+          display: flex;
+          flex-direction: column;
+          gap: 1.6rem;
+        `}
+      >
+        <button
+          type="button"
+          css={css`
+            background-color: ${theme.Gray[200]};
+            padding: 0.8rem 1.6rem;
+            border-radius: 1.2rem;
+            width: 100%;
+          `}
+        >
+          + 새로운 채팅 시작하기
+        </button>
+        <div
+          css={css`
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+          `}
+        >
+          <p>이전 7일간 채팅</p>
+          <ChatList title="Japan Travel" />
+          <ChatList title="Japan Travel" />
+          <ChatList title="Japan Travel" />
+          <ChatList title="Japan Travel" />
+          <ChatList title="Japan Travel" />
+        </div>
+        <div
+          css={css`
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+          `}
+        >
+          <p>이전 7일간 채팅</p>
+          <ChatList title="Japan Travel" />
+          <ChatList title="Japan Travel" />
+          <ChatList title="Japan Travel" />
+          <ChatList title="Japan Travel" />
+          <ChatList title="Japan Travel" />
+        </div>
+      </div>
+    </TabContainer>
   );
 };
