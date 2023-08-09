@@ -110,7 +110,7 @@ export const HomeGridContainer = ({ children }: ContainerType) => {
         display: grid;
         grid-template-columns: 1fr;
         grid-gap: 1.6rem;
-        padding-bottom: 8rem;
+        padding-bottom: 0.8rem;
         @media screen and (min-width: 768px) {
           grid-template-columns: repeat(2, 1fr);
           margin: 1.6rem;

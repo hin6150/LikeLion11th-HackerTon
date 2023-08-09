@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { ReactNode } from 'react';
 import { css } from '@emotion/react';
+import { BsChat } from 'react-icons/bs';
 import theme from '../../styles/theme';
 import { ContainerType } from '../../types/type';
 
@@ -94,7 +95,76 @@ export const ChatInputContainer = ({ children }: ContainerType) => {
         }
       `}
     >
-      {children}{' '}
+      {children}
+    </div>
+  );
+};
+
+const ChatList = ({ title }: { title: string }) => {
+  return (
+    <div
+      css={css`
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      `}
+    >
+      <BsChat />
+      <p>{title}</p>
+    </div>
+  );
+};
+
+export const ChatHistory = () => {
+  return (
+    <div
+      css={css`
+        width: 100%;
+        padding: 0.8rem 1.6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.6rem;
+      `}
+    >
+      <button
+        type="button"
+        css={css`
+          background-color: ${theme.Gray[200]};
+          padding: 0.8rem 1.6rem;
+          border-radius: 1.2rem;
+          width: 100%;
+        `}
+      >
+        + 새로운 채팅 시작하기
+      </button>
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+          gap: 0.8rem;
+        `}
+      >
+        <p>이전 7일간 채팅</p>
+        <ChatList title="Japan Travel" />
+        <ChatList title="Japan Travel" />
+        <ChatList title="Japan Travel" />
+        <ChatList title="Japan Travel" />
+        <ChatList title="Japan Travel" />
+      </div>
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+          gap: 0.8rem;
+        `}
+      >
+        <p>이전 7일간 채팅</p>
+        <ChatList title="Japan Travel" />
+        <ChatList title="Japan Travel" />
+        <ChatList title="Japan Travel" />
+        <ChatList title="Japan Travel" />
+        <ChatList title="Japan Travel" />
+      </div>
     </div>
   );
 };
