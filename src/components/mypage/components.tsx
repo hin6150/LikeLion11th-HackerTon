@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import React from 'react';
-import { BsThreeDotsVertical } from 'react-icons/bs';
+import { BsPencil, BsThreeDotsVertical, BsTrash } from 'react-icons/bs';
 import theme from '../../styles/theme';
 import { ContainerType } from '../../types/type';
 
@@ -128,5 +128,98 @@ export const TextBoxContainer = ({ children }: ContainerType) => {
     >
       {children}
     </div>
+  );
+};
+
+export const UserDetailVideoList = () => {
+  return (
+    <>
+      <div
+        css={css`
+          display: grid;
+          grid-template-columns: 2fr 1fr 1fr;
+          text-align: left;
+          p:last-child {
+            display: none;
+          }
+          @media screen and (min-width: 768px) {
+            grid-template-columns: 3fr 1fr 1fr 1fr;
+            p:last-child {
+              display: block;
+            }
+          }
+        `}
+      >
+        <div
+          css={css`
+            display: flex;
+            gap: 1.6rem;
+            align-items: start;
+          `}
+        >
+          <input
+            type="checkbox"
+            css={css`
+              display: none;
+              @media screen and (min-width: 768px) {
+                display: block;
+              }
+            `}
+          />
+          <div
+            css={css`
+              background-color: ${theme.Gray[300]};
+              width: 8rem;
+              height: 6rem;
+              border-radius: 2rem;
+              @media screen and (min-width: 768px) {
+                width: 12rem;
+                height: 8rem;
+              }
+            `}
+          />
+          <div
+            css={css`
+              display: flex;
+              flex-direction: column;
+              gap: 0.8rem;
+            `}
+          >
+            <h1
+              css={css`
+                ${theme.Typography.Small1}
+              `}
+            >
+              동영상 제목
+            </h1>
+            <p
+              css={css`
+                ${theme.Typography.Small3}
+              `}
+            >
+              동영상 설명
+            </p>
+            <div
+              css={css`
+                display: none;
+                @media screen and (min-width: 768px) {
+                  display: block;
+                  font-size: 24px;
+                  display: flex;
+                  gap: 1.6rem;
+                }
+              `}
+            >
+              <BsPencil />
+              <BsTrash />
+            </div>
+          </div>
+        </div>
+        <p>없음</p>
+        <p>불가능</p>
+        <p>3</p>
+      </div>
+      <hr />
+    </>
   );
 };
