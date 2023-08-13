@@ -37,12 +37,12 @@ export const Overlay = ({ onClick }: { onClick: React.MouseEventHandler<HTMLDivE
   );
 };
 
-const FilterList = ({ title, describe }: { title: string; describe: string }) => {
+export const FilterList = ({ title, describe }: { title: string; describe: string }) => {
   return (
     <div
       css={css`
         position: relative;
-        margin: 16px;
+        margin: 1.6rem 0;
       `}
     >
       <h2
@@ -80,13 +80,13 @@ const TabContainer = ({ children }: ContainerType) => {
   return (
     <div
       css={css`
-        text-align: left;
-        height: 100vh;
-        width: 100vw;
-        z-index: 100;
-        background-color: ${theme.Gray[100]};
         position: fixed;
         top: 0;
+        width: 100vw;
+        height: 100vh;
+        text-align: left;
+        z-index: 100;
+        background-color: ${theme.Gray[100]};
         @media screen and (min-width: 768px) {
           width: 60%;
           right: 0;
@@ -102,7 +102,7 @@ const TabContainer = ({ children }: ContainerType) => {
   );
 };
 
-const UpperBar = ({ title }: { title: string }) => {
+export const UpperBar = ({ title }: { title: string }) => {
   const dispatch = useDispatch();
 
   return (
@@ -131,37 +131,47 @@ export const FilterTabModal = () => {
     <TabContainer>
       <UpperBar title="필터" />
       <hr />
-      <h2
+      <div
         css={css`
-          ${theme.Typography.Body2}
-          margin: 16px;
+          margin: 1.6rem;
         `}
       >
-        분야별
-      </h2>
-      <FilterList title="생활지식" describe="실생활에서 사용하는 간단한 지식에 대한 강의에요" />
-      <FilterList title="여가" describe="다양한 즐길거리에 대한 정보를 얻을 수 있어요" />
-      <FilterList
-        title="정부 지원 정보"
-        describe="지자체에서 제공하는 혜택 정보를 정리해둔 영상들이 있어요"
-      />
-      <FilterList
-        title="전자 기기"
-        describe="스마트폰, 무인주문기계 등 여러 전자기기의 정보를 얻을 수 있어요"
-      />
-      <FilterList title="자산" describe="부동산, 금융 등의 제테크 정보들을 얻을 수 있어요" />
+        <h2
+          css={css`
+            ${theme.Typography.Body2}
+          `}
+        >
+          분야별
+        </h2>
+        <FilterList title="생활지식" describe="실생활에서 사용하는 간단한 지식에 대한 강의에요" />
+        <FilterList title="여가" describe="다양한 즐길거리에 대한 정보를 얻을 수 있어요" />
+        <FilterList
+          title="정부 지원 정보"
+          describe="지자체에서 제공하는 혜택 정보를 정리해둔 영상들이 있어요"
+        />
+        <FilterList
+          title="전자 기기"
+          describe="스마트폰, 무인주문기계 등 여러 전자기기의 정보를 얻을 수 있어요"
+        />
+        <FilterList title="자산" describe="부동산, 금융 등의 제테크 정보들을 얻을 수 있어요" />
+      </div>
       <hr />
-      <h2
+      <div
         css={css`
-          ${theme.Typography.Body2}
-          margin: 16px;
+          margin: 1.6rem;
         `}
       >
-        연령별
-      </h2>
-      <FilterList title="10대 이하" describe="" />
-      <FilterList title="20대 ~ 40대" describe="" />
-      <FilterList title="50대 이상" describe="" />/
+        <h2
+          css={css`
+            ${theme.Typography.Body2}
+          `}
+        >
+          연령별
+        </h2>
+        <FilterList title="10대 이하" describe="" />
+        <FilterList title="20대 ~ 40대" describe="" />
+        <FilterList title="50대 이상" describe="" />
+      </div>
     </TabContainer>
   );
 };
