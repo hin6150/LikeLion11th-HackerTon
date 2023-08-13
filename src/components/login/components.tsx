@@ -39,7 +39,7 @@ export const ButtonBox = ({
         background-color: ${color};
         border-radius: 0.8rem;
         ${theme.Typography.ButtonText}
-        color: ${textColor}
+        color: ${textColor};
       `}
       onClick={onClick}
     >
