@@ -28,7 +28,13 @@ export const ChatBox = ({ type, children }: { type: 'gpt' | 'user'; children: Re
         }
       `}
     >
-      <p>{children}</p>
+      <p
+        css={css`
+          white-space: pre-wrap;
+        `}
+      >
+        {children}
+      </p>
     </div>
   );
 };
