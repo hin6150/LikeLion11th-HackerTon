@@ -45,10 +45,10 @@ const Chat = () => {
     setMessage('');
 
     try {
-      const result = await postChat(message);
+      const response = await postChat(message);
 
-      if ('data' in result) {
-        const responseData = result.data;
+      if ('data' in response) {
+        const responseData = response.data;
         const transformedMessage = responseData.content
           .replace(/\\n/g, '\n')
           .replace(/\. /g, '.\n');
@@ -57,8 +57,8 @@ const Chat = () => {
           ...prevData,
           { type: 'gpt', message: transformedMessage, video: responseData.recommendVideo },
         ]);
-      } else if ('error' in result) {
-        console.log('요청실패!', result);
+      } else if ('error' in response) {
+        console.log('요청실패!', response);
         setMessageList((prevData) => [
           ...prevData,
           { type: 'gpt', message: '에러! 올바르게 입력해주세요.' },
