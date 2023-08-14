@@ -24,10 +24,10 @@ export const memberApi = createApi({
       }),
     }),
     login: builder.mutation({
-      query: ({ username, psassword }) => ({
+      query: ({ username, password }) => ({
         url: 'login',
         method: 'POST',
-        body: { username, psassword },
+        body: { username, password },
       }),
     }),
   }),

@@ -3,7 +3,8 @@ import { RootState } from '.';
 
 type InitialState = {
   user: string;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 };
 
 /**
@@ -12,7 +13,8 @@ type InitialState = {
  */
 const initialState: InitialState = {
   user: '',
-  token: '',
+  accessToken: '',
+  refreshToken: '',
 };
 
 export const userSlice = createSlice({
@@ -20,11 +22,11 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, actions) => {
-      const { user, token } = actions.payload;
-      return { ...state, user, token };
+      const { user, accessToken, refreshToken } = actions.payload;
+      return { ...state, user, accessToken, refreshToken };
     },
     logout: () => {
-      return { user: '', token: '' };
+      return { user: '', accessToken: '', refreshToken: '' };
     },
   },
 });

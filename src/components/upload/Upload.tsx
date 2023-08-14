@@ -9,19 +9,6 @@ import { UploadModal } from './components';
 const Upload = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isOpen, setIsOpen] = useState(true);
-  // const fileName = [
-  //   '.mp4',
-  //   '.webm',
-  //   '.avi',
-  //   '.mov',
-  //   '.mkv',
-  //   '.flv',
-  //   '.wmv',
-  //   '.mpeg',
-  //   '.mpg',
-  //   '.m4v',
-  //   '.3gp',
-  // ];
 
   return (
     <div

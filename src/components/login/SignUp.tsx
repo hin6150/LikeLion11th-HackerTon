@@ -4,8 +4,7 @@ import React, { useState } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import theme from '../../styles/theme';
-import { ButtonBox, InputBox, LoginContainer, LoginLayout } from './components';
+import { ButtonBox, CheckBox, InputBox, LoginContainer, LoginTitle } from './components';
 import { setUser } from '../../store/userSlice';
 
 const SingUp = () => {
@@ -13,7 +12,7 @@ const SingUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   return (
-    <LoginLayout>
+    <LoginContainer>
       <Link to="/signin">
         <BsArrowLeft
           css={css`
@@ -24,15 +23,8 @@ const SingUp = () => {
           `}
         />
       </Link>
-      <LoginContainer>
-        <h2
-          css={css`
-            ${theme.Typography.Header1}
-            margin-bottom: 1.6rem;
-          `}
-        >
-          회원가입
-        </h2>
+      <form>
+        <LoginTitle title="회원가입" />
         <InputBox placeholder="이름" />
 
         <div
@@ -62,26 +54,7 @@ const SingUp = () => {
         <InputBox placeholder="비밀번호" />
         <InputBox placeholder="비밀번호 확인" />
 
-        <label
-          htmlFor="policy"
-          css={css`
-            display: flex;
-            ${theme.Typography.Body2}
-            gap: 0.4rem;
-          `}
-        >
-          <input
-            id="policy"
-            type="checkbox"
-            css={css`
-              width: 1.6rem;
-              height: 1.6rem;
-              /* border-radius: 6.4rem; */
-              border: 1px solid ${theme.Gray[950]};
-            `}
-          />
-          <p>개인정보 수집 및 이용에 동의합니다.</p>
-        </label>
+        <CheckBox id="policy" text="개인정보 수집 및 이용에 동의합니다." />
 
         <ButtonBox
           text="회원가입"
@@ -90,8 +63,8 @@ const SingUp = () => {
             navigate(`/mypage/test0001`);
           }}
         />
-      </LoginContainer>
-    </LoginLayout>
+      </form>
+    </LoginContainer>
   );
 };
 

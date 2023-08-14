@@ -10,14 +10,14 @@ import { VideoContainer, VideoFrame, VideoInfo } from '../home/components';
 import { selectUser } from '../../store/userSlice';
 
 const MyPage = () => {
-  const { token, user } = useSelector(selectUser);
+  const { accessToken, user } = useSelector(selectUser);
   const navigate = useNavigate();
 
   const [isWeb, setIsWeb] = useState(window.innerWidth >= 1366);
   const repeatedVideos = Array.from({ length: 20 });
 
   useEffect(() => {
-    if (token === '') {
+    if (accessToken === '') {
       navigate('/signin');
     } else {
       navigate(`/mypage/${user}`);
