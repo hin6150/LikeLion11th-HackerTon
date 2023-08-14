@@ -19,7 +19,9 @@ const Chat = () => {
     },
   ]);
   const [postChat, { isLoading, isError }] = usePostChatMutation();
+
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isError) {
@@ -30,6 +32,9 @@ const Chat = () => {
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+    if (inputRef.current) {
+      inputRef.current.focus(); // 자동으로 포커스 주기
     }
   }, [messageList]);
 
@@ -121,6 +126,7 @@ const Chat = () => {
             서비스설명
           </button>
           <input
+            ref={inputRef}
             placeholder={!isLoading ? '챗봇에게 질문하기' : '답변 중 입니다 ...'}
             css={css`
               background-color: ${theme.Gray[100]};
