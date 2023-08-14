@@ -2,26 +2,18 @@
 import { css } from '@emotion/react';
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import theme from '../../styles/theme';
 import { MyPageVideoComponent, TextBoxContainer, UserBoxContainer } from './components';
 import { VideoContainer, VideoFrame, VideoInfo } from '../home/components';
-import { selectUser } from '../../store/userSlice';
 
 const MyPage = () => {
-  const { accessToken, user } = useSelector(selectUser);
   const navigate = useNavigate();
 
   const [isWeb, setIsWeb] = useState(window.innerWidth >= 1366);
   const repeatedVideos = Array.from({ length: 20 });
 
   useEffect(() => {
-    if (accessToken === '') {
-      navigate('/signin');
-    } else {
-      navigate(`/mypage/${user}`);
-    }
     const handleResize = () => {
       setIsWeb(window.innerWidth >= 1366);
     };

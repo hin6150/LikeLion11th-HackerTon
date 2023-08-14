@@ -17,7 +17,8 @@ import { setUser } from '../../store/userSlice';
 const SignIn = () => {
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
-  const [postLogin] = useLoginMutation();
+
+  const [postLogin, { isError }] = useLoginMutation();
   // , { isLoading, isError, isSuccess }
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -60,6 +61,7 @@ const SignIn = () => {
           })}
         />
         <CheckBox id="keepLogin" text="로그인 상태 유지" />
+        {isError ? <p>올바른 정보를 입력해주세요.</p> : null}
 
         <ButtonBox text="로그인" />
         <ButtonBox textColor="#3A1D1D" color="#f9e000" text="카카오로 로그인" />
