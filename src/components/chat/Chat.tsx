@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BsSend } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 import theme from '../../styles/theme';
@@ -18,7 +18,8 @@ const Chat = () => {
         '안녕하세요 당신의 검색을 도와드리는 000입니다.\n현재는 50자 이내로 답변하고 있습니다.',
     },
   ]);
-  const [postChat, { isLoading, isError }] = usePostChatMutation(); // POST 요청 훅
+  const [postChat, { isLoading, isError }] = usePostChatMutation();
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isError) {
@@ -26,20 +27,26 @@ const Chat = () => {
     }
   }, [isError]);
 
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messageList]);
+
   const handleSend = async () => {
     if (message === '') return;
 
-    setMessageList((prevData) => [
-      ...prevData,
-      { type: 'user', message }, // 새로운 데이터를 추가하는 방식으로 변경
-    ]);
+    setMessageList((prevData) => [...prevData, { type: 'user', message }]);
     setMessage('');
+
     try {
-      const result = await postChat(message); // POST 요청 보내기
+      const result = await postChat(message);
 
       if ('data' in result) {
         const responseData = result.data;
-        const transformedMessage = responseData.replace(/\\n/g, '\n').replace(/\./g, '.\n'); // .을 .\n으로 바꿈
+        const transformedMessage = responseData.content
+          .replace(/\\n/g, '\n')
+          .replace(/\. /g, '.\n');
         console.log('요청성공!', responseData);
         setMessageList((prevData) => [
           ...prevData,
@@ -79,6 +86,7 @@ const Chat = () => {
           overflow: scroll;
           height: calc(100vh - 21rem);
         `}
+        ref={chatContainerRef}
       >
         {messageList.map((data) => {
           const uniqueKey = uuidv4();
@@ -113,7 +121,7 @@ const Chat = () => {
             서비스설명
           </button>
           <input
-            placeholder="챗봇에게 질문하기"
+            placeholder={!isLoading ? '챗봇에게 질문하기' : '답변 중 입니다 ...'}
             css={css`
               background-color: ${theme.Gray[100]};
               border-radius: 1.6rem;
@@ -133,20 +141,17 @@ const Chat = () => {
               setMessage(e.target.value);
             }}
             onKeyDown={handleKeyPress}
+            disabled={isLoading}
           />
-          {!isLoading ? (
-            <BsSend
-              css={css`
-                font-size: 3.2rem;
-                @media screen and (min-width: 1366px) {
-                  font-size: 4.8rem;
-                }
-              `}
-              onClick={handleSend}
-            />
-          ) : (
-            <p>Loading</p>
-          )}
+          <BsSend
+            css={css`
+              font-size: 3.2rem;
+              @media screen and (min-width: 1366px) {
+                font-size: 4.8rem;
+              }
+            `}
+            onClick={handleSend}
+          />
         </ChatInputContainer>
       </div>
       <div
