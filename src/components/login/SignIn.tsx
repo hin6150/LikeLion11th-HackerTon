@@ -11,24 +11,31 @@ import {
   LoginTitle,
   LoginToRegister,
 } from './components';
-import { useLoginMutation } from '../../store/memberSlice';
+import { useLoginMutation } from '../../store/memberApi';
 import { setUser } from '../../store/userSlice';
+import { setCookie } from '../../store/cookie';
 
 const SignIn = () => {
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
 
   const [postLogin, { isError }] = useLoginMutation();
-  // , { isLoading, isError, isSuccess }
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const response = await postLogin({ username: data.email, password: data.password });
+    const response = await postLogin({ username: data.email, password: data.password }).unwrap();
 
-    if ('data' in response) {
-      const token = response.data;
-      dispatch(setUser({ accessToken: token.accessToken, refreshToken: token.refreshToken }));
-    } else if ('error' in response) {
-      console.log(response.error);
+    const { accessToken, refreshToken } = response;
+
+    if (refreshToken) {
+      setCookie('refreshToken', refreshToken, {
+        path: '/',
+        // secure: true, https 서버 필요
+        // httpOnly: true, header에만 전송 가능
+        expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 2주 후의 밀리초(ms) 값
+      });
+      // 암호화를 하려면, https://velog.io/@defaultkyle/react-cookie처럼 header에 refreshToken 값을 담아서 보내야함.
+
+      dispatch(setUser({ accessToken }));
     }
   };
 

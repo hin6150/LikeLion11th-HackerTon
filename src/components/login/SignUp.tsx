@@ -6,8 +6,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { ButtonBox, CheckBox, InputBoxForm, LoginContainer, LoginTitle } from './components';
-import { useLoginMutation, useSignUpMutation } from '../../store/memberSlice';
+import { useLoginMutation, useSignUpMutation } from '../../store/memberApi';
 import { setUser } from '../../store/userSlice';
+import { setCookie } from '../../store/cookie';
 
 const SingUp = () => {
   const [sentEmail, setSentEmail] = useState(false);
@@ -29,14 +30,19 @@ const SingUp = () => {
       const loginData = await postLogin({
         username: data.email,
         password: data.password,
-      });
+      }).unwrap();
 
-      if ('data' in loginData) {
-        const token = loginData.data;
-        dispatch(setUser({ accessToken: token.accessToken, refreshToken: token.refreshToken }));
+      const { accessToken, refreshToken } = loginData;
+
+      if (refreshToken) {
+        setCookie('refreshToken', refreshToken, {
+          path: '/',
+          // secure: true, https 서버 필요
+          // httpOnly: true, header에만 전송 가능
+          expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 2주 후의 밀리초(ms) 값
+        });
+        dispatch(setUser({ accessToken }));
         navigate('/home');
-      } else if ('error' in loginData) {
-        console.log(loginData.error);
       }
     } else if ('error' in response) {
       console.log(response.error);

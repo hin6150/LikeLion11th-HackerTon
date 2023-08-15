@@ -37,11 +37,23 @@ export const memberApi = createApi({
         body: { username, password, nickname, userRole: 'MEMBER' },
       }),
     }),
+    getAccessToken: builder.mutation({
+      query: ({ refreshToken }) => ({
+        url: 'renew-access-token',
+        method: 'POST',
+        body: { refreshToken },
+      }),
+    }),
   }),
 });
 
 // 자동으로 생성되는 훅을 사용하기 위해서 export 합니다.
-export const { useGetVideosQuery, usePostChatMutation, useLoginMutation, useSignUpMutation } =
-  memberApi;
+export const {
+  useGetVideosQuery,
+  usePostChatMutation,
+  useLoginMutation,
+  useSignUpMutation,
+  useGetAccessTokenMutation,
+} = memberApi;
 
 export default memberApi;
