@@ -30,10 +30,18 @@ export const memberApi = createApi({
         body: { username, password },
       }),
     }),
+    signUp: builder.mutation({
+      query: ({ username, password, nickname }) => ({
+        url: 'signup',
+        method: 'POST',
+        body: { username, password, nickname, userRole: 'MEMBER' },
+      }),
+    }),
   }),
 });
 
 // 자동으로 생성되는 훅을 사용하기 위해서 export 합니다.
-export const { useGetVideosQuery, usePostChatMutation, useLoginMutation } = memberApi;
+export const { useGetVideosQuery, usePostChatMutation, useLoginMutation, useSignUpMutation } =
+  memberApi;
 
 export default memberApi;

@@ -22,12 +22,11 @@ const SignIn = () => {
   // , { isLoading, isError, isSuccess }
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data);
     const response = await postLogin({ username: data.email, password: data.password });
-    console.log(response);
 
     if ('data' in response) {
-      dispatch(setUser({ accessToken: data.accessToken, refreshToken: data.refreshToken }));
+      const token = response.data;
+      dispatch(setUser({ accessToken: token.accessToken, refreshToken: token.refreshToken }));
     } else if ('error' in response) {
       console.log(response.error);
     }
@@ -48,6 +47,7 @@ const SignIn = () => {
         <LoginTitle title="로그인" />
 
         <InputBoxForm
+          type="email"
           placeholder="이메일을 입력해주세요"
           register={register('email', {
             required: '이메일을 입력해주세요',
