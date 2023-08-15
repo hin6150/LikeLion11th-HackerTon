@@ -2,7 +2,7 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { HomeGridContainer, VideoContainer, VideoFrame, VideoInfo } from './components';
-import { useGetVideosQuery } from '../../store/memberSlice';
+import { useGetVideosQuery } from '../../store/memberApi';
 
 const Home = () => {
   const repeatedVideos = Array.from({ length: 10 });

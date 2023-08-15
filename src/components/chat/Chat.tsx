@@ -5,7 +5,7 @@ import { BsSend } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 import theme from '../../styles/theme';
 import { ChatBox, ChatHistory, ChatImageBox, ChatInputContainer } from './components';
-import { usePostChatMutation } from '../../store/memberSlice';
+import { usePostChatMutation } from '../../store/memberApi';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
