@@ -61,7 +61,8 @@ export const FilterList = ({ title, describe }: { title: string; describe: strin
       >
         {describe}
       </p>
-      <div
+      <input
+        type="checkbox"
         css={css`
           position: absolute;
           right: 0;

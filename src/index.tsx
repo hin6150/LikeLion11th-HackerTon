@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { ThemeProvider } from '@emotion/react';
 import { Provider } from 'react-redux';
+import { CookiesProvider } from 'react-cookie';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import theme from './styles/theme';
@@ -14,11 +15,13 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <GlobalModal />
-        <App />
-      </ThemeProvider>
+      <CookiesProvider>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <GlobalModal />
+          <App />
+        </ThemeProvider>
+      </CookiesProvider>
     </Provider>
   </React.StrictMode>,
 );

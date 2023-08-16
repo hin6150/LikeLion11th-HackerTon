@@ -1,11 +1,80 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BsSend } from 'react-icons/bs';
+import { v4 as uuidv4 } from 'uuid';
 import theme from '../../styles/theme';
 import { ChatBox, ChatHistory, ChatImageBox, ChatInputContainer } from './components';
+import { usePostChatMutation } from '../../store/memberApi';
 
 const Chat = () => {
+  const [message, setMessage] = useState('');
+  const [messageList, setMessageList] = useState<
+    Array<{ type: 'gpt' | 'user'; message: string; video?: [] }>
+  >([
+    {
+      type: 'gpt',
+      message:
+        '안녕하세요 당신의 검색을 도와드리는 000입니다.\n현재는 50자 이내로 답변하고 있습니다.',
+    },
+  ]);
+  const [postChat, { isLoading, isError }] = usePostChatMutation();
+
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isError) {
+      alert('ERROR!');
+    }
+  }, [isError]);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+    if (inputRef.current) {
+      inputRef.current.focus(); // 자동으로 포커스 주기
+    }
+  }, [messageList]);
+
+  const handleSend = async () => {
+    if (message === '') return;
+
+    setMessageList((prevData) => [...prevData, { type: 'user', message }]);
+    setMessage('');
+
+    try {
+      const response = await postChat(message);
+
+      if ('data' in response) {
+        const responseData = response.data;
+        const transformedMessage = responseData.content
+          .replace(/\\n/g, '\n')
+          .replace(/\. /g, '.\n');
+        console.log('요청성공!', responseData);
+        setMessageList((prevData) => [
+          ...prevData,
+          { type: 'gpt', message: transformedMessage, video: responseData.recommendVideo },
+        ]);
+      } else if ('error' in response) {
+        console.log('요청실패!', response);
+        setMessageList((prevData) => [
+          ...prevData,
+          { type: 'gpt', message: '에러! 올바르게 입력해주세요.' },
+        ]);
+      }
+    } catch (error) {
+      console.error('GPT 요청에 실패했습니다.', error);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isLoading && e.key === 'Enter') {
+      handleSend();
+    }
+  };
+
   return (
     <div
       css={css`
@@ -22,46 +91,24 @@ const Chat = () => {
           overflow: scroll;
           height: calc(100vh - 21rem);
         `}
+        ref={chatContainerRef}
       >
-        <div
-          css={css`
-            margin: 0 1.6rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.6rem;
-          `}
-        >
-          <ChatBox type="gpt">
-            안녕하세요! 당신의 검색을 도와드리는 OOO 입니다! <br /> 무엇을 찾아보고 싶나요?
-          </ChatBox>
-          <ChatBox type="user">
-            비행기 표 끊고 일본으로 가고 싶은데 어떻게 해야 되는지를 모르겠다.
-          </ChatBox>
-          <div>
-            <ChatBox type="gpt">
-              일본으로 비행기 표를 예약하고 여행을 계획하는 것은 간단하지만, 처음에는 혼동스러울 수
-              있습니다. 아래는 비행기 표 예약과 여행 계획을 세우는 기본적인 단계들입니다
-              <br />
-              1. 유효한 여권 확인
-              <br />
-              2. 여행 날짜와 기간 선정
-              <br />
-              3. 항공권 예약 및 가격 비교
-              <br />
-              해당 내용과 관련되어 도움을 줄 수 있는 영상은 다음과 같습니다.
-            </ChatBox>
-            <ChatImageBox />
-          </div>
-          <ChatBox type="gpt">
-            안녕하세요! 당신의 검색을 도와드리는 OOO 입니다! <br /> 무엇을 찾아보고 싶나요?
-          </ChatBox>
-          <ChatBox type="gpt">
-            안녕하세요! 당신의 검색을 도와드리는 OOO 입니다! <br /> 무엇을 찾아보고 싶나요?
-          </ChatBox>
-          <ChatBox type="gpt">
-            안녕하세요! 당신의 검색을 도와드리는 OOO 입니다! <br /> 무엇을 찾아보고 싶나요?
-          </ChatBox>
-        </div>
+        {messageList.map((data) => {
+          const uniqueKey = uuidv4();
+          return (
+            <div
+              key={uniqueKey}
+              css={css`
+                display: flex;
+                flex-direction: column;
+                margin: 1.6rem;
+              `}
+            >
+              <ChatBox type={data.type}>{data.message}</ChatBox>
+              {data.video && data.video.length > 0 ? <ChatImageBox /> : null}
+            </div>
+          );
+        })}
         <ChatInputContainer>
           <button
             type="button"
@@ -79,7 +126,8 @@ const Chat = () => {
             서비스설명
           </button>
           <input
-            placeholder="챗봇에게 질문하기"
+            ref={inputRef}
+            placeholder={!isLoading ? '챗봇에게 질문하기' : '답변 중 입니다 ...'}
             css={css`
               background-color: ${theme.Gray[100]};
               border-radius: 1.6rem;
@@ -94,6 +142,12 @@ const Chat = () => {
                 border-radius: 3.2rem;
               }
             `}
+            value={message}
+            onChange={(e: any) => {
+              setMessage(e.target.value);
+            }}
+            onKeyDown={handleKeyPress}
+            disabled={isLoading}
           />
           <BsSend
             css={css`
@@ -102,6 +156,7 @@ const Chat = () => {
                 font-size: 4.8rem;
               }
             `}
+            onClick={handleSend}
           />
         </ChatInputContainer>
       </div>

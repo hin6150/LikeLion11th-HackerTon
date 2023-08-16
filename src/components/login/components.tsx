@@ -1,10 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React, { ReactNode } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { UseFormRegisterReturn } from 'react-hook-form';
 import theme from '../../styles/theme';
 import { ContainerType } from '../../types/type';
 
-export const LoginLayout = ({ children }: ContainerType) => {
+export const LoginContainer = ({ children }: ContainerType) => {
   return (
     <div
       css={css`
@@ -19,6 +21,7 @@ export const LoginLayout = ({ children }: ContainerType) => {
     </div>
   );
 };
+
 export const ButtonBox = ({
   color,
   textColor,
@@ -32,7 +35,7 @@ export const ButtonBox = ({
 }) => {
   return (
     <button
-      type="button"
+      type="submit"
       css={css`
         width: 100%;
         padding: 1.6rem;
@@ -69,24 +72,90 @@ export const InputBox = ({ placeholder }: { placeholder: string }) => {
   );
 };
 
-export const LoginContainer = ({ children }: { children: ReactNode }) => {
+export const InputBoxForm = ({
+  placeholder,
+  register,
+  type,
+}: {
+  placeholder: string;
+  type?: string;
+  register: UseFormRegisterReturn;
+}) => {
   return (
-    <div
+    <input
+      placeholder={placeholder}
+      type={type}
+      css={css`
+        width: 100%;
+        padding: 1.6rem;
+        ${theme.Typography.Body2}
+        background-color: ${theme.Gray[100]};
+        border-radius: 0.8rem;
+      `}
+      name={register.name}
+      ref={register.ref}
+      onChange={register.onChange}
+    />
+  );
+};
+InputBoxForm.defaultProps = { type: 'text' };
+
+export const CheckBox = ({ id, text }: { id: string; text: string }) => {
+  return (
+    <label
+      htmlFor={id}
       css={css`
         display: flex;
-        flex-direction: column;
-        gap: 1.6rem;
-        width: 100%;
-        padding: 0 1.6rem;
-        @media screen and (min-width: 768px) {
-          width: 80%;
-        }
-        @media screen and (min-width: 1366px) {
-          width: 50%;
-        }
+        ${theme.Typography.Body2}
+        gap: 0.4rem;
       `}
     >
-      {children}
-    </div>
+      <input
+        id={id}
+        type="checkbox"
+        css={css`
+          width: 1.6rem;
+          height: 1.6rem;
+          border: 1px solid ${theme.Gray[950]};
+        `}
+      />
+      <p>{text}</p>
+    </label>
+  );
+};
+
+export const LoginTitle = ({ title }: { title: string }) => {
+  return (
+    <h2
+      css={css`
+        ${theme.Typography.Header1}
+        margin-bottom: 1.6rem;
+      `}
+    >
+      {title}
+    </h2>
+  );
+};
+
+export const LoginToRegister = () => {
+  return (
+    <p
+      css={css`
+        ${theme.Typography.ButtonText}
+        margin-top: 1.6rem;
+      `}
+    >
+      아이디가 없으신가요?
+      <Link to="/signup">
+        <span
+          css={css`
+            color: ${theme.Colors.Primary};
+            margin-left: 0.8rem;
+          `}
+        >
+          회원가입하기
+        </span>
+      </Link>
+    </p>
   );
 };

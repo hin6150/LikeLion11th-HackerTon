@@ -2,26 +2,25 @@
 import { css } from '@emotion/react';
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import theme from '../../styles/theme';
 import { MyPageVideoComponent, TextBoxContainer, UserBoxContainer } from './components';
 import { VideoContainer, VideoFrame, VideoInfo } from '../home/components';
+import { useGetMyVideosQuery } from '../../store/memberApi';
 import { selectUser } from '../../store/userSlice';
 
 const MyPage = () => {
-  const { token, user } = useSelector(selectUser);
   const navigate = useNavigate();
+  const { accessToken } = useSelector(selectUser);
+  const { data: videos, isLoading, isError } = useGetMyVideosQuery({ accessToken }); // API 슬라이스의 훅을 사용합니다.
 
   const [isWeb, setIsWeb] = useState(window.innerWidth >= 1366);
   const repeatedVideos = Array.from({ length: 20 });
 
   useEffect(() => {
-    if (token === '') {
-      navigate('/signin');
-    } else {
-      navigate(`/mypage/${user}`);
-    }
+    console.log(videos);
+
     const handleResize = () => {
       setIsWeb(window.innerWidth >= 1366);
     };
@@ -31,7 +30,15 @@ const MyPage = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [navigate]);
+  }, [navigate, videos]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading videos</div>;
+  }
 
   return (
     <div

@@ -1,27 +1,37 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
-import { ButtonBox, InputBox } from '../login/components';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
+import { ButtonBox, InputBoxForm } from '../login/components';
 import { FilterList } from '../modal/component';
 import theme from '../../styles/theme';
 import { UploadModal } from './components';
+import { useUploadVideoMutation } from '../../store/memberApi';
+import { selectUser } from '../../store/userSlice';
 
 const Upload = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isOpen, setIsOpen] = useState(true);
-  // const fileName = [
-  //   '.mp4',
-  //   '.webm',
-  //   '.avi',
-  //   '.mov',
-  //   '.mkv',
-  //   '.flv',
-  //   '.wmv',
-  //   '.mpeg',
-  //   '.mpg',
-  //   '.m4v',
-  //   '.3gp',
-  // ];
+
+  const { register, handleSubmit } = useForm();
+
+  const titleProps = register('title', { required: '제목을 입력해주세요' });
+  const descriptionProps = register('description', { required: '상세정보를 입력해주세요' });
+  const tagProps = register('tag', { required: '#태그를 입력해주세요' });
+
+  const { accessToken } = useSelector(selectUser);
+
+  const [postVideo, { isLoading }] = useUploadVideoMutation();
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    if (file) {
+      const req = { title: data.title, detail: data.description, tag: data.tag, file, accessToken };
+      console.log(req);
+      const response = await postVideo(req);
+      console.log(response);
+    }
+  };
 
   return (
     <div
@@ -79,7 +89,8 @@ const Upload = () => {
         )}
       </div>
 
-      <div
+      <form
+        onSubmit={handleSubmit(onSubmit)}
         css={css`
           display: flex;
           flex-direction: column;
@@ -95,8 +106,11 @@ const Upload = () => {
           `}
         >
           <h1>기본정보</h1>
-          <InputBox placeholder="제목을 입력해주세요" />
+          <InputBoxForm placeholder="제목을 입력해 주세요." register={titleProps} />
           <textarea
+            name={descriptionProps.name}
+            ref={descriptionProps.ref}
+            onBlur={descriptionProps.onBlur}
             placeholder="상세정보를 입력해주세요"
             css={css`
               background-color: ${theme.Gray[100]};
@@ -106,7 +120,7 @@ const Upload = () => {
               height: 16rem;
             `}
           />
-          <InputBox placeholder="#태그를 입력해주세요" />
+          <InputBoxForm placeholder="#태그를 입력해 주세요." register={tagProps} />
         </div>
         <hr />
         <div>
@@ -141,9 +155,23 @@ const Upload = () => {
           <FilterList title="10대 이하" describe="" />
           <FilterList title="20대 ~ 40대" describe="" />
           <FilterList title="50대 이상" describe="" />
-          <ButtonBox text="업로드 하기" />
+          {!isLoading ? (
+            <ButtonBox text="업로드 하기" />
+          ) : (
+            <div
+              css={css`
+                background-color: ${theme.Colors.Primary};
+                color: white;
+                text-align: center;
+                padding: 1.6rem;
+                border-radius: 1.6rem;
+              `}
+            >
+              업로드 중
+            </div>
+          )}
         </div>
-      </div>
+      </form>
       {isOpen && <UploadModal setFile={setFile} setIsOpen={setIsOpen} />}
     </div>
   );

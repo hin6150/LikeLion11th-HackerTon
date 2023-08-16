@@ -3,16 +3,16 @@ import { RootState } from '.';
 
 type InitialState = {
   user: string;
-  token: string;
+  accessToken: string | null;
 };
 
 /**
  * user: UserName
- * token: JWT TOKEN
+ * accessToken: JWT TOKEN
  */
 const initialState: InitialState = {
   user: '',
-  token: '',
+  accessToken: null,
 };
 
 export const userSlice = createSlice({
@@ -20,11 +20,11 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, actions) => {
-      const { user, token } = actions.payload;
-      return { ...state, user, token };
+      const { user, accessToken } = actions.payload;
+      return { ...state, user, accessToken };
     },
     logout: () => {
-      return { user: '', token: '' };
+      return { user: '', accessToken: null };
     },
   },
 });

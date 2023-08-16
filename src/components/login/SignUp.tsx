@@ -3,17 +3,54 @@ import { css } from '@emotion/react';
 import React, { useState } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import theme from '../../styles/theme';
-import { ButtonBox, InputBox, LoginContainer, LoginLayout } from './components';
+import { ButtonBox, CheckBox, InputBoxForm, LoginContainer, LoginTitle } from './components';
+import { useLoginMutation, useSignUpMutation } from '../../store/memberApi';
 import { setUser } from '../../store/userSlice';
+import { setCookie } from '../../store/cookie';
 
 const SingUp = () => {
   const [sentEmail, setSentEmail] = useState(false);
+  const { register, handleSubmit } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [postSingUp] = useSignUpMutation();
+  const [postLogin] = useLoginMutation();
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const response = await postSingUp({
+      username: data.email,
+      password: data.password,
+      nickname: data.nickname,
+    });
+
+    if ('data' in response) {
+      const loginData = await postLogin({
+        username: data.email,
+        password: data.password,
+      }).unwrap();
+
+      const { accessToken, refreshToken } = loginData;
+
+      if (refreshToken) {
+        setCookie('refreshToken', refreshToken, {
+          path: '/',
+          // secure: true, https 서버 필요
+          // httpOnly: true, header에만 전송 가능
+          expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 2주 후의 밀리초(ms) 값
+        });
+        dispatch(setUser({ accessToken }));
+        navigate('/home');
+      }
+    } else if ('error' in response) {
+      console.log(response.error);
+    }
+  };
+
   return (
-    <LoginLayout>
+    <LoginContainer>
       <Link to="/signin">
         <BsArrowLeft
           css={css`
@@ -24,17 +61,29 @@ const SingUp = () => {
           `}
         />
       </Link>
-      <LoginContainer>
-        <h2
-          css={css`
-            ${theme.Typography.Header1}
-            margin-bottom: 1.6rem;
-          `}
-        >
-          회원가입
-        </h2>
-        <InputBox placeholder="이름" />
-
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        css={css`
+          display: flex;
+          flex-direction: column;
+          gap: 1.6rem;
+          width: 50%;
+          min-width: 30rem;
+        `}
+      >
+        <LoginTitle title="회원가입" />
+        <InputBoxForm
+          placeholder="이름을 입력해 주세요."
+          register={register('name', {
+            required: '이름을 입력해주세요',
+          })}
+        />
+        <InputBoxForm
+          placeholder="별명(닉네임)을 입력해 주세요."
+          register={register('nickname', {
+            required: '별명(닉네임)을 입력해주세요',
+          })}
+        />
         <div
           css={css`
             display: grid;
@@ -42,10 +91,15 @@ const SingUp = () => {
             gap: 0.8rem;
           `}
         >
-          <InputBox placeholder="이메일" />
+          <InputBoxForm
+            type="email"
+            placeholder="이메일을 입력해주세요"
+            register={register('email', {
+              required: '이메일을 입력해주세요',
+            })}
+          />
           <ButtonBox text="인증번호 전송" onClick={() => setSentEmail(true)} />
         </div>
-
         {sentEmail && (
           <div
             css={css`
@@ -54,44 +108,33 @@ const SingUp = () => {
               gap: 0.8rem;
             `}
           >
-            <InputBox placeholder="인증번호" />
+            <InputBoxForm
+              placeholder="인증번호를 입력해주세요"
+              register={register('certification', {
+                required: '인증번호를 입력해주세요',
+              })}
+            />
             <ButtonBox text="인증번호 확인" />
           </div>
         )}
-
-        <InputBox placeholder="비밀번호" />
-        <InputBox placeholder="비밀번호 확인" />
-
-        <label
-          htmlFor="policy"
-          css={css`
-            display: flex;
-            ${theme.Typography.Body2}
-            gap: 0.4rem;
-          `}
-        >
-          <input
-            id="policy"
-            type="checkbox"
-            css={css`
-              width: 1.6rem;
-              height: 1.6rem;
-              /* border-radius: 6.4rem; */
-              border: 1px solid ${theme.Gray[950]};
-            `}
-          />
-          <p>개인정보 수집 및 이용에 동의합니다.</p>
-        </label>
-
-        <ButtonBox
-          text="회원가입"
-          onClick={() => {
-            dispatch(setUser({ user: 'test0001', token: 'jwt' }));
-            navigate(`/mypage/test0001`);
-          }}
+        <InputBoxForm
+          type="password"
+          placeholder="비밀번호를 입력해주세요"
+          register={register('password', {
+            required: '비밀번호를 입력해주세요',
+          })}
         />
-      </LoginContainer>
-    </LoginLayout>
+        <InputBoxForm
+          type="password"
+          placeholder="비밀번호를 한번 더 입력해주세요"
+          register={register('verifyPassword', {
+            required: '비밀번호를 한번 더 입력해주세요',
+          })}
+        />
+        <CheckBox id="policy" text="개인정보 수집 및 이용에 동의합니다." />
+        <ButtonBox text="회원가입" />
+      </form>
+    </LoginContainer>
   );
 };
 
