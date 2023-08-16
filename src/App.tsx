@@ -66,7 +66,7 @@ function App() {
             <Route path="/mypage" element={accessToken ? <MyPage /> : <SignIn />} />
             {/* <Route path="/mypage/:username" element={<MyPage />} /> */}
             <Route path="/mypage/detail" element={<MyPageDetail />} />
-            <Route path="/signin" element={<SignIn />} />
+            {/* <Route path="/signin" element={<SignIn />} /> */}
             <Route path="/signup" element={<SignUp />} />
           </Routes>
         ) : (

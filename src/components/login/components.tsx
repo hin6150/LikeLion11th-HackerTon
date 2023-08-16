@@ -11,10 +11,15 @@ export const LoginContainer = ({ children }: ContainerType) => {
     <div
       css={css`
         position: relative;
+        height: 100%;
+        margin: auto;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100%;
+        padding-bottom: 9.6rem;
+        @media screen and (min-width: 1366px) {
+          padding-bottom: 0;
+        }
       `}
     >
       {children}
@@ -120,6 +125,7 @@ export const ErrorDescription = ({ text }: any) => {
         color: red;
         text-align: left;
         margin-left: 1.6rem;
+        margin-bottom: 0.8rem;
       `}
     >
       {text}
