@@ -58,10 +58,10 @@ export const memberApi = createApi({
       }),
     }),
     signUp: builder.mutation({
-      query: ({ username, password, nickname }) => ({
+      query: ({ username, password, nickname, name }) => ({
         url: 'signup',
         method: 'POST',
-        body: { username, password, nickname, userRole: 'MEMBER' },
+        body: { username, password, nickname, name, userRole: 'MEMBER' },
       }),
     }),
     getAccessToken: builder.mutation({
@@ -82,6 +82,13 @@ export const memberApi = createApi({
         body: createFormData(data),
       }),
     }),
+    mail: builder.mutation({
+      query: ({ email }) => ({
+        url: 'mail',
+        method: 'post',
+        params: { email },
+      }),
+    }),
   }),
 });
 
@@ -94,6 +101,7 @@ export const {
   useSignUpMutation,
   useGetAccessTokenMutation,
   useUploadVideoMutation,
+  useMailMutation,
 } = memberApi;
 
 export default memberApi;

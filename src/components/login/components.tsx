@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import theme from '../../styles/theme';
@@ -26,20 +26,25 @@ export const ButtonBox = ({
   color,
   textColor,
   text,
+  submit,
   onClick,
+  disabled,
 }: {
   color?: string;
   textColor?: string;
   text: string;
+  submit?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
 }) => {
   return (
     <button
-      type="submit"
+      disabled={disabled}
+      type={submit ? 'submit' : 'button'}
       css={css`
         width: 100%;
         padding: 1.6rem;
-        background-color: ${color};
+        background-color: ${disabled ? theme.Gray[400] : color};
         border-radius: 0.8rem;
         ${theme.Typography.ButtonText}
         color: ${textColor};
@@ -54,6 +59,8 @@ export const ButtonBox = ({
 ButtonBox.defaultProps = {
   color: `${theme.Colors.Primary}`,
   textColor: `${theme.Gray[50]}`,
+  submit: false,
+  disabled: false,
   onClick: () => {},
 };
 
@@ -89,8 +96,13 @@ export const InputBoxForm = ({
         width: 100%;
         padding: 1.6rem;
         ${theme.Typography.Body2}
-        background-color: ${theme.Gray[100]};
+        background-color: ${theme.Gray[50]};
         border-radius: 0.8rem;
+        box-sizing: border-box;
+        &:focus {
+          border: 1px solid ${theme.Colors.Primary};
+          outline: none;
+        }
       `}
       name={register.name}
       ref={register.ref}
@@ -99,6 +111,21 @@ export const InputBoxForm = ({
   );
 };
 InputBoxForm.defaultProps = { type: 'text' };
+
+export const ErrorDescription = ({ text }: any) => {
+  return (
+    <p
+      css={css`
+        ${theme.Typography.PreTitle}
+        color: red;
+        text-align: left;
+        margin-left: 1.6rem;
+      `}
+    >
+      {text}
+    </p>
+  );
+};
 
 export const CheckBox = ({ id, text }: { id: string; text: string }) => {
   return (
@@ -157,5 +184,33 @@ export const LoginToRegister = () => {
         </span>
       </Link>
     </p>
+  );
+};
+
+export const Article = ({ children }: { children: ReactNode }) => {
+  return (
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      `}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const GridBox = ({ children }: { children: ReactNode }) => {
+  return (
+    <div
+      css={css`
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        gap: 0.8rem;
+      `}
+    >
+      {children}
+    </div>
   );
 };
