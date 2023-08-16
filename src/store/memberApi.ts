@@ -1,5 +1,24 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+const createFormData = (data: any) => {
+  const formData = new FormData();
+  formData.append(
+    'videoUploadReqeustDto',
+    JSON.stringify({
+      title: data.title,
+      videoTitle: data.file.name,
+      videoDetail: data.detail,
+      videoState: 'accept',
+      videoCategory: 'lifeKnowledge',
+      ageCategory: 'youth',
+      hashTag: [data.tag],
+    }),
+  );
+  formData.append('file', data.file);
+
+  return formData;
+};
+
 export const memberApi = createApi({
   reducerPath: 'memberApi',
   baseQuery: fetchBaseQuery({
@@ -13,6 +32,14 @@ export const memberApi = createApi({
         return {
           url: 'video',
           //   params: { api_key, language },
+        };
+      },
+    }),
+    getMyVideos: builder.query({
+      query: ({ accessToken }) => {
+        return {
+          url: 'video/myVideo',
+          headers: { Authorization: `Bearer ${accessToken}` },
         };
       },
     }),
@@ -44,16 +71,29 @@ export const memberApi = createApi({
         body: { refreshToken },
       }),
     }),
+    uploadVideo: builder.mutation({
+      query: (data) => ({
+        url: 'video',
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${data.accessToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+        body: createFormData(data),
+      }),
+    }),
   }),
 });
 
 // 자동으로 생성되는 훅을 사용하기 위해서 export 합니다.
 export const {
   useGetVideosQuery,
+  useGetMyVideosQuery,
   usePostChatMutation,
   useLoginMutation,
   useSignUpMutation,
   useGetAccessTokenMutation,
+  useUploadVideoMutation,
 } = memberApi;
 
 export default memberApi;
