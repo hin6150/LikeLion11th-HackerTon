@@ -201,12 +201,11 @@ export const UploadModal = ({ setFile, setIsOpen }: FileUploadProps) => {
   );
 };
 
-export const FilterCheckBox = ({
+export const FilterRadioBox = ({
   title,
   id,
   describe,
   register,
-  checked,
 }: {
   title: string;
   id:
@@ -221,12 +220,7 @@ export const FilterCheckBox = ({
     | 'NULL';
   describe: string;
   register: UseFormRegisterReturn;
-  checked?: boolean;
 }) => {
-  const [isChecked, setIsChecked] = useState(checked);
-
-  // console.log(checked);
-
   return (
     <div
       css={css`
@@ -260,12 +254,8 @@ export const FilterCheckBox = ({
           value={id}
           name={register.name}
           ref={register.ref}
-          onChange={(event) => {
-            register.onChange(event);
-            setIsChecked(!isChecked);
-          }}
-          type="checkbox"
-          checked={isChecked}
+          onChange={register.onChange}
+          type="radio"
           css={css`
             position: absolute;
             right: 0;
@@ -279,10 +269,6 @@ export const FilterCheckBox = ({
       </label>
     </div>
   );
-};
-
-FilterCheckBox.defaultProps = {
-  checked: false,
 };
 
 export const TextAreaForm = ({

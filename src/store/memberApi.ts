@@ -11,8 +11,8 @@ const createFormData = ({
 }: {
   title: string;
   videoDetail: string;
-  videoCategory: string[];
-  ageCategory: string[];
+  videoCategory: string;
+  ageCategory: string;
   hashTag: string[];
   file: File;
 }) => {
@@ -22,13 +22,13 @@ const createFormData = ({
   formData.append('title', title);
   formData.append('videoDetail', videoDetail);
   formData.append('videoState', 'standBy');
-  formData.append('videoCategory', JSON.stringify(videoCategory));
-  formData.append('ageCategory', JSON.stringify(ageCategory));
+  formData.append('videoCategory', videoCategory);
+  formData.append('ageCategory', ageCategory);
   formData.append('hashTag', JSON.stringify(hashTag));
 
-  // formData.forEach((value, key) => {
-  //   console.log(`${key}: ${value}`);
-  // });
+  formData.forEach((value, key) => {
+    console.log(`${key}: ${value}`);
+  });
 
   return formData;
 };

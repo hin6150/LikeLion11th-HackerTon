@@ -5,7 +5,7 @@ import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { Article, ButtonBox, ErrorDescription, InputBoxForm } from '../login/components';
 import theme from '../../styles/theme';
-import { FilterCheckBox, TextAreaForm, UploadModal } from './components';
+import { FilterRadioBox, TextAreaForm, UploadModal } from './components';
 import { useUploadVideoMutation } from '../../store/memberApi';
 import { selectUser } from '../../store/userSlice';
 
@@ -33,13 +33,12 @@ const Upload = () => {
   const validateHashTag = () => {
     return hashTags.length > 0 || '하나 이상의 해시태그를 입력하세요.';
   };
-  const validateCategory = (array: string[]) => {
-    return array.length > 0 || '하나 이상의 카테고리를 선택하세요.';
-  };
 
   const hashTagProps = register('hashTag', { validate: validateHashTag });
-  const videoCategoryProps = register('videoCategory', { validate: validateCategory });
-  const ageCategoryProps = register('ageCategory', { validate: validateCategory });
+  const videoCategoryProps = register('videoCategory', {
+    required: '동영상의 분야를 선택해주세요.',
+  });
+  const ageCategoryProps = register('ageCategory', { required: '추천 연령대를 선택해주세요.' });
 
   const { accessToken } = useSelector(selectUser);
 
@@ -71,7 +70,7 @@ const Upload = () => {
   // https://velog.io/@reasonz/라이브러리-없이-React로-해시태그-구현하기-feat.-버그와의-싸움
 
   const addHashTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const allowedCommand = ['Comma', 'Enter', 'Space', 'NumpadEnter'];
+    const allowedCommand = ['Comma', 'Enter', 'Space', 'NumpadEnter', 'Tab'];
     if (!allowedCommand.includes(e.code)) return;
 
     if (hashTags.length >= 10) {
@@ -284,7 +283,7 @@ const Upload = () => {
                 value={inputHashTag}
                 onKeyUp={addHashTag}
                 onKeyDown={keyDownHandler}
-                placeholder="#해시태그를 등록해보세요. (최대 10개)"
+                placeholder="#해시태그를 등록해보세요. 공백, 줄바꿈으로 입력 할 수 있습니다."
               />
             </div>
             {errors?.hashTag && <ErrorDescription text={errors?.hashTag?.message} />}
@@ -301,31 +300,31 @@ const Upload = () => {
           >
             동영상의 분야를 알려주세요
           </h2>
-          <FilterCheckBox
+          <FilterRadioBox
             title="생활지식"
             id="lifeKnowledge"
             describe="실생활에서 사용하는 간단한 지식에 대한 강의에요"
             register={videoCategoryProps}
           />
-          <FilterCheckBox
+          <FilterRadioBox
             title="여가"
             id="Leisure"
             describe="다양한 즐길거리에 대한 정보를 얻을 수 있어요"
             register={videoCategoryProps}
           />
-          <FilterCheckBox
+          <FilterRadioBox
             title="정부 지원 정보"
             id="GovernmentSupportInformation"
             describe="지자체에서 제공하는 혜택 정보를 정리해둔 영상들이 있어요"
             register={videoCategoryProps}
           />
-          <FilterCheckBox
+          <FilterRadioBox
             title="전자 기기"
             id="Electronics"
             describe="스마트폰, 무인주문기계 등 여러 전자기기의 정보를 얻을 수 있어요"
             register={videoCategoryProps}
           />
-          <FilterCheckBox
+          <FilterRadioBox
             title="자산"
             id="asset"
             describe="부동산, 금융 등의 제테크 정보들을 얻을 수 있어요"
@@ -346,9 +345,9 @@ const Upload = () => {
           >
             추천 연령대를 알려주세요
           </h2>
-          <FilterCheckBox id="youth" title="10대 이하" describe="" register={ageCategoryProps} />
-          <FilterCheckBox id="adult" title="20대 ~ 40대" describe="" register={ageCategoryProps} />
-          <FilterCheckBox id="oldMan" title="50대 이상" describe="" register={ageCategoryProps} />
+          <FilterRadioBox id="youth" title="10대 이하" describe="" register={ageCategoryProps} />
+          <FilterRadioBox id="adult" title="20대 ~ 40대" describe="" register={ageCategoryProps} />
+          <FilterRadioBox id="oldMan" title="50대 이상" describe="" register={ageCategoryProps} />
           {errors?.ageCategory && <ErrorDescription text={errors?.ageCategory?.message} category />}
         </div>
 

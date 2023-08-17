@@ -4,12 +4,11 @@ import React, { ReactNode, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BsArrowLeft, BsChat, BsSearch, BsSoundwave, BsXLg } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { FieldValues, SubmitHandler, UseFormRegisterReturn, useForm } from 'react-hook-form';
 import theme from '../../styles/theme';
 import { closeModal } from '../../store/modalSlice';
 import { ContainerType } from '../../types/type';
 import { ButtonBox } from '../login/components';
-import { FilterCheckBox } from '../upload/components';
 import { selectFliter, setFliter } from '../../store/filterSlice';
 
 export const ModalContainer = ({ children }: { children: ReactNode }) => {
@@ -88,6 +87,84 @@ export const UpperBar = ({ title }: { title: string }) => {
       >
         {title}
       </p>
+    </div>
+  );
+};
+
+const FilterCheckBox = ({
+  title,
+  id,
+  describe,
+  register,
+  checked,
+}: {
+  title: string;
+  id:
+    | 'lifeKnowledge'
+    | 'Leisure'
+    | 'GovernmentSupportInformation'
+    | 'Electronics'
+    | 'asset'
+    | 'youth'
+    | 'adult'
+    | 'oldMan'
+    | 'NULL';
+  describe: string;
+  register: UseFormRegisterReturn;
+  checked: boolean;
+}) => {
+  const [isChecked, setIsChecked] = useState(checked);
+
+  return (
+    <div
+      css={css`
+        margin: 1.6rem 0;
+      `}
+    >
+      <label
+        htmlFor={id}
+        css={css`
+          position: relative;
+        `}
+      >
+        <h2
+          css={css`
+            ${theme.Typography.Small1}
+            margin-bottom: 4px;
+          `}
+        >
+          {title}
+        </h2>
+        <p
+          css={css`
+            ${theme.Typography.Small2}
+            color: ${theme.Gray[500]};
+          `}
+        >
+          {describe}
+        </p>
+        <input
+          id={id}
+          value={id}
+          name={register.name}
+          ref={register.ref}
+          onChange={(event) => {
+            register.onChange(event);
+            setIsChecked(!isChecked);
+          }}
+          type="checkBox"
+          checked={isChecked}
+          css={css`
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid ${theme.Gray[400]};
+          `}
+        />
+      </label>
     </div>
   );
 };
