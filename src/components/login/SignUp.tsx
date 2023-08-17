@@ -31,13 +31,12 @@ const SingUp = () => {
     setError,
     watch,
     formState: { errors },
-    formState,
   } = useForm({ mode: 'onChange' });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [postSingUp] = useSignUpMutation();
+  const [postSignUp, { isLoading: isLoadingSignup }] = useSignUpMutation();
   const [postLogin] = useLoginMutation();
   const [postMail, { isLoading: isLoadingMail }] = useMailMutation();
 
@@ -66,7 +65,7 @@ const SingUp = () => {
       alert('이메일 인증을 완료해주세요.');
       return;
     }
-    const response = await postSingUp({
+    const response = await postSignUp({
       username: data.email,
       name: data.name,
       password: data.password,
@@ -257,7 +256,7 @@ const SingUp = () => {
           </Article>
 
           <CheckBox id="policy" text="개인정보 수집 및 이용에 동의합니다." />
-          <ButtonBox text="회원가입" submit disabled={formState.isSubmitting} />
+          <ButtonBox text="회원가입" submit disabled={isLoadingSignup} />
         </form>
       </LoginContainer>
     </div>

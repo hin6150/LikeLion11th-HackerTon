@@ -70,7 +70,7 @@ const HomeDetail = () => {
             ${theme.Typography.Header3}
           `}
         >
-          제목
+          {getVideoQuery.videoTitle}
         </h2>
 
         <p
