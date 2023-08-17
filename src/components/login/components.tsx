@@ -104,9 +104,9 @@ export const InputBoxForm = ({
         background-color: ${theme.Gray[50]};
         border-radius: 0.8rem;
         box-sizing: border-box;
+        border: 2px solid ${theme.Gray[50]};
         &:focus {
-          border: 1px solid ${theme.Colors.Primary};
-          outline: none;
+          border: 2px solid ${theme.Colors.Primary};
         }
       `}
       name={register.name}

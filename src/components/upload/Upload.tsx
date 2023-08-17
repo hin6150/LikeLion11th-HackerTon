@@ -4,9 +4,8 @@ import { css } from '@emotion/react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { ButtonBox, InputBoxForm } from '../login/components';
-import { FilterList } from '../modal/component';
 import theme from '../../styles/theme';
-import { UploadModal } from './components';
+import { FilterCheckBox, UploadModal } from './components';
 import { useUploadVideoMutation } from '../../store/memberApi';
 import { selectUser } from '../../store/userSlice';
 
@@ -17,19 +16,35 @@ const Upload = () => {
   const { register, handleSubmit } = useForm();
 
   const titleProps = register('title', { required: '제목을 입력해주세요' });
-  const descriptionProps = register('description', { required: '상세정보를 입력해주세요' });
-  const tagProps = register('tag', { required: '#태그를 입력해주세요' });
+  const descriptionProps = register('videoDetail', { required: '상세정보를 입력해주세요' });
+  const tagProps = register('hashTag', { required: '#태그를 입력해주세요' });
+  const videoCategoryProps = register('videoCategory', {});
+  const ageCategoryProps = register('ageCategory', {});
 
   const { accessToken } = useSelector(selectUser);
 
   const [postVideo, { isLoading }] = useUploadVideoMutation();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    if (file) {
-      const req = { title: data.title, detail: data.description, tag: data.tag, file, accessToken };
-      console.log(req);
-      const response = await postVideo(req);
+    if (!file) {
+      alert('동영상을 업로드 해주세요.');
+      return;
+    }
+    const { title, videoDetail, videoCategory, ageCategory, hashTag } = data;
+    console.log(data);
+    try {
+      const response = await postVideo({
+        title,
+        videoDetail,
+        videoCategory,
+        ageCategory,
+        hashTag,
+        accessToken,
+        file,
+      });
       console.log(response);
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -48,44 +63,45 @@ const Upload = () => {
     >
       <div>
         {file ? (
-          // eslint-disable-next-line jsx-a11y/media-has-caption
-          <video
-            controls
-            width="100%"
-            css={css`
-              border-radius: 2rem;
-            `}
-          >
-            <source src={URL.createObjectURL(file)} type={file.type} />
-          </video>
+          <>
+            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+            <video
+              controls
+              width="100%"
+              css={css`
+                border-radius: 2rem;
+              `}
+            >
+              <source src={URL.createObjectURL(file)} type={file.type} />
+            </video>
+            <div
+              css={css`
+                display: flex;
+              `}
+            >
+              <p>파일 이름: {file.name}</p>
+              <ButtonBox
+                text="다시 업로드 하기"
+                onClick={() => {
+                  setFile(null);
+                  setIsOpen(true);
+                }}
+              />
+            </div>
+          </>
         ) : (
-          <div
-            css={css`
-              width: 100%;
-              height: 40vh;
-              border-radius: 2rem;
-              background-color: ${theme.Gray[300]};
-              margin-bottom: 1.6rem;
-            `}
-          />
-        )}
-        {file ? (
-          <div
-            css={css`
-              display: flex;
-            `}
-          >
-            <p>파일 이름: {file.name}</p>
-            <ButtonBox
-              text="다시 업로드 하기"
-              onClick={() => {
-                setFile(null);
-                setIsOpen(true);
-              }}
+          <>
+            <div
+              css={css`
+                width: 100%;
+                height: 40vh;
+                border-radius: 2rem;
+                background-color: ${theme.Gray[300]};
+                margin-bottom: 1.6rem;
+              `}
             />
-          </div>
-        ) : (
-          <ButtonBox text="동영상을 올려주세요." onClick={() => setIsOpen(true)} />
+            <ButtonBox text="동영상을 올려주세요." onClick={() => setIsOpen(true)} />
+          </>
         )}
       </div>
 
@@ -113,11 +129,17 @@ const Upload = () => {
             onBlur={descriptionProps.onBlur}
             placeholder="상세정보를 입력해주세요"
             css={css`
-              background-color: ${theme.Gray[100]};
+              ${theme.Typography.Body2}
+              background-color: ${theme.Gray[50]};
               border-radius: 0.8rem;
               padding: 1.6rem;
               resize: none;
               height: 16rem;
+              border: 2px solid ${theme.Gray[50]};
+              outline: none;
+              &:focus {
+                border: 2px solid ${theme.Colors.Primary};
+              }
             `}
           />
           <InputBoxForm placeholder="#태그를 입력해 주세요." register={tagProps} />
@@ -131,17 +153,36 @@ const Upload = () => {
           >
             동영상의 분야를 알려주세요
           </h2>
-          <FilterList title="생활지식" describe="실생활에서 사용하는 간단한 지식에 대한 강의에요" />
-          <FilterList title="여가" describe="다양한 즐길거리에 대한 정보를 얻을 수 있어요" />
-          <FilterList
+          <FilterCheckBox
+            title="생활지식"
+            id="lifeKnowledge"
+            describe="실생활에서 사용하는 간단한 지식에 대한 강의에요"
+            register={videoCategoryProps}
+          />
+          <FilterCheckBox
+            title="여가"
+            id="Leisure"
+            describe="다양한 즐길거리에 대한 정보를 얻을 수 있어요"
+            register={videoCategoryProps}
+          />
+          <FilterCheckBox
             title="정부 지원 정보"
+            id="GovernmentSupportInformation"
             describe="지자체에서 제공하는 혜택 정보를 정리해둔 영상들이 있어요"
+            register={videoCategoryProps}
           />
-          <FilterList
+          <FilterCheckBox
             title="전자 기기"
+            id="Electronics"
             describe="스마트폰, 무인주문기계 등 여러 전자기기의 정보를 얻을 수 있어요"
+            register={videoCategoryProps}
           />
-          <FilterList title="자산" describe="부동산, 금융 등의 제테크 정보들을 얻을 수 있어요" />
+          <FilterCheckBox
+            title="자산"
+            id="asset"
+            describe="부동산, 금융 등의 제테크 정보들을 얻을 수 있어요"
+            register={videoCategoryProps}
+          />
         </div>
         <hr />
         <div>
@@ -152,24 +193,10 @@ const Upload = () => {
           >
             추천 연령대를 알려주세요
           </h2>
-          <FilterList title="10대 이하" describe="" />
-          <FilterList title="20대 ~ 40대" describe="" />
-          <FilterList title="50대 이상" describe="" />
-          {!isLoading ? (
-            <ButtonBox text="업로드 하기" />
-          ) : (
-            <div
-              css={css`
-                background-color: ${theme.Colors.Primary};
-                color: white;
-                text-align: center;
-                padding: 1.6rem;
-                border-radius: 1.6rem;
-              `}
-            >
-              업로드 중
-            </div>
-          )}
+          <FilterCheckBox id="youth" title="10대 이하" describe="" register={ageCategoryProps} />
+          <FilterCheckBox id="adult" title="20대 ~ 40대" describe="" register={ageCategoryProps} />
+          <FilterCheckBox id="oldMan" title="50대 이상" describe="" register={ageCategoryProps} />
+          <ButtonBox text={isLoading ? '업로드 중' : '업로드 하기'} submit disabled={isLoading} />
         </div>
       </form>
       {isOpen && <UploadModal setFile={setFile} setIsOpen={setIsOpen} />}

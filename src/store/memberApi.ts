@@ -1,20 +1,37 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const createFormData = (data: any) => {
+const createFormData = ({
+  title,
+  videoDetail,
+  videoCategory,
+  ageCategory,
+  hashTag,
+  file,
+  accessToken,
+}: {
+  title: string;
+  videoDetail: string;
+  videoCategory: string;
+  ageCategory: string;
+  hashTag: string;
+  accessToken: string;
+  file: File;
+}) => {
+  console.log(title, videoDetail, [hashTag], videoCategory, ageCategory, accessToken, file);
+
   const formData = new FormData();
+  formData.append('file', file);
   formData.append(
     'videoUploadReqeustDto',
     JSON.stringify({
-      title: data.title,
-      videoTitle: data.file.name,
-      videoDetail: data.detail,
-      videoState: 'accept',
-      videoCategory: 'lifeKnowledge',
+      title,
+      videoDetail,
+      videoState: 'standBy',
+      videoCategory: 'Leisure',
       ageCategory: 'youth',
-      hashTag: [data.tag],
+      hashTag: [hashTag],
     }),
   );
-  formData.append('file', data.file);
 
   return formData;
 };

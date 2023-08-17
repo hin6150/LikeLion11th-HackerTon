@@ -2,6 +2,7 @@
 import { css } from '@emotion/react';
 import React, { useState } from 'react';
 import { BsUpload, BsXLg } from 'react-icons/bs';
+import { UseFormRegisterReturn } from 'react-hook-form';
 import theme from '../../styles/theme';
 
 interface FileUploadProps {
@@ -91,17 +92,35 @@ const FileUpload = ({ setFile, setIsOpen }: FileUploadProps) => {
         >
           <BsUpload />
         </div>
-        <p>동영상 파일을 드래그 앤 드롭하여 업로드하세요</p>
-        <p>또는 파일 선택을 통해 업로드 할 수 있습니다.</p>
+        <div
+          css={css`
+            ${theme.Typography.Small2}
+            @media screen and (min-width: 768px) {
+              ${theme.Typography.Body2}
+            }
+            > p:first-of-type {
+              display: none;
+              @media screen and (min-width: 768px) {
+                display: block;
+              }
+            }
+          `}
+        >
+          <p>동영상 파일을 드래그 앤 드롭하여 업로드하세요</p>
+          <p>파일 선택을 통해 업로드 할 수 있습니다.</p>
+        </div>
         <label
           htmlFor="video_file"
           css={css`
-            width: 100%;
+            width: 90%;
             padding: 1.6rem;
             background-color: ${theme.Colors.Primary};
             border-radius: 0.8rem;
-            ${theme.Typography.ButtonText}
+            ${theme.Typography.PreTitle}
             color: ${theme.Gray[50]};
+            @media screen and (min-width: 768px) {
+              ${theme.Typography.ButtonText}
+            }
           `}
         >
           파일 업로드하기
@@ -178,6 +197,76 @@ export const UploadModal = ({ setFile, setIsOpen }: FileUploadProps) => {
         />
         <FileUpload setFile={setFile} setIsOpen={setIsOpen} />
       </div>
+    </div>
+  );
+};
+
+export const FilterCheckBox = ({
+  title,
+  id,
+  describe,
+  register,
+}: {
+  title: string;
+  id:
+    | 'lifeKnowledge'
+    | 'Leisure'
+    | 'GovernmentSupportInformation'
+    | 'Electronics'
+    | 'asset'
+    | 'youth'
+    | 'adult'
+    | 'oldMan'
+    | 'NULL';
+  describe: string;
+  register: UseFormRegisterReturn;
+}) => {
+  return (
+    <div
+      css={css`
+        margin: 1.6rem 0;
+      `}
+    >
+      <label
+        htmlFor={id}
+        css={css`
+          position: relative;
+        `}
+      >
+        <h2
+          css={css`
+            ${theme.Typography.Small1}
+            margin-bottom: 4px;
+          `}
+        >
+          {title}
+        </h2>
+        <p
+          css={css`
+            ${theme.Typography.Small2}
+            color: ${theme.Gray[500]};
+          `}
+        >
+          {describe}
+        </p>
+        <input
+          id={id}
+          value={id}
+          name={register.name}
+          ref={register.ref}
+          onChange={register.onChange}
+          type="checkbox"
+          css={css`
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid ${theme.Gray[400]};
+          `}
+        />
+      </label>
     </div>
   );
 };
