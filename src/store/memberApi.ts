@@ -52,8 +52,19 @@ export const memberApi = createApi({
         };
       },
     }),
+    getVideo: builder.query({
+      query: (id: string | undefined) => {
+        return { url: `video/${id}` };
+      },
+    }),
     getMyVideos: builder.query({
-      query: ({ accessToken }) => {
+      query: ({ accessToken, memberId }) => {
+        if (memberId) {
+          return {
+            url: `${memberId}/videoList`,
+          };
+        }
+
         return {
           url: 'video/myVideo',
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -112,6 +123,7 @@ export const memberApi = createApi({
 // 자동으로 생성되는 훅을 사용하기 위해서 export 합니다.
 export const {
   useGetVideosQuery,
+  useGetVideoQuery,
   useGetMyVideosQuery,
   usePostChatMutation,
   useLoginMutation,

@@ -2,8 +2,9 @@
 import { css } from '@emotion/react';
 import React from 'react';
 import { BsPencil, BsThreeDotsVertical, BsTrash } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 import theme from '../../styles/theme';
-import { ContainerType } from '../../types/type';
+import { ContainerType, DataType } from '../../types/type';
 
 const MyPageVideoFrame = () => {
   return (
@@ -21,33 +22,39 @@ const MyPageVideoFrame = () => {
     />
   );
 };
-const MyPageVideoInfo = () => {
+const MyPageVideoInfo = ({ data }: { data: DataType }) => {
   return (
     <div
       css={css`
         display: flex;
         flex-direction: column;
         gap: 0.8rem;
+        text-align: left;
         ${theme.Typography.Body2}
       `}
     >
-      <p>동영상 제목</p>
+      <p>{data.videoTitle}</p>
       <p>조회수: 0회</p>
       <p>업로드 날짜</p>
     </div>
   );
 };
-export const MyPageVideoComponent = () => {
+export const MyPageVideoComponent = ({ data }: { data: DataType }) => {
+  const navigate = useNavigate();
   return (
     <div
+      role="presentation"
       css={css`
         display: flex;
         gap: 1.6rem;
         margin: 0 1.6rem;
       `}
+      onClick={() => {
+        navigate(`/home/${data.videoId}`);
+      }}
     >
       <MyPageVideoFrame />
-      <MyPageVideoInfo />
+      <MyPageVideoInfo data={data} />
       <BsThreeDotsVertical
         css={css`
           position: absolute;
@@ -71,7 +78,7 @@ const UserIcon = () => {
   );
 };
 
-export const UserBoxContainer = () => {
+export const UserBoxContainer = ({ data }: { data: DataType }) => {
   return (
     <div
       css={css`
@@ -96,9 +103,9 @@ export const UserBoxContainer = () => {
         `}
       >
         <p>이름</p>
-        <p>홍길동</p>
+        <p>{data.writer}</p>
         <p>이메일</p>
-        <p>example@email.com</p>
+        <p>{data.writer}</p>
       </div>
       <p
         css={css`

@@ -2,21 +2,23 @@
 import { css } from '@emotion/react';
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import theme from '../../styles/theme';
 import { MyPageVideoComponent, TextBoxContainer, UserBoxContainer } from './components';
 import { VideoContainer, VideoFrame, VideoInfo } from '../home/components';
 import { useGetMyVideosQuery } from '../../store/memberApi';
 import { selectUser } from '../../store/userSlice';
+import { DataType } from '../../types/type';
 
 const MyPage = () => {
+  const { memberId } = useParams();
   const navigate = useNavigate();
   const { accessToken } = useSelector(selectUser);
-  const { data: videos, isLoading, isError } = useGetMyVideosQuery({ accessToken }); // API 슬라이스의 훅을 사용합니다.
+
+  const { data: videos, isLoading, isError } = useGetMyVideosQuery({ accessToken, memberId });
 
   const [isWeb, setIsWeb] = useState(window.innerWidth >= 1366);
-  const repeatedVideos = Array.from({ length: 20 });
 
   useEffect(() => {
     console.log(videos);
@@ -48,7 +50,7 @@ const MyPage = () => {
         height: 100%;
       `}
     >
-      <UserBoxContainer />
+      <UserBoxContainer data={videos.content[0]} />
       <TextBoxContainer>
         <p>업로드한 동영상 강의</p>
         <Link to="/mypage/detail">
@@ -74,12 +76,12 @@ const MyPage = () => {
             overflow: scroll;
           `}
         >
-          {repeatedVideos.map(() => {
+          {videos.content.map((data: DataType) => {
             const uniqueKey = uuidv4();
             return (
-              <VideoContainer key={uniqueKey} id={uniqueKey}>
+              <VideoContainer key={uniqueKey} id={data.videoId}>
                 <VideoFrame />
-                <VideoInfo title="영상제목" author="영상작성자" view={10} uploadDate={new Date()} />
+                <VideoInfo data={data} />
               </VideoContainer>
             );
           })}
@@ -95,11 +97,10 @@ const MyPage = () => {
             margin-bottom: 8rem;
           `}
         >
-          <MyPageVideoComponent />
-          <MyPageVideoComponent />
-          <MyPageVideoComponent />
-          <MyPageVideoComponent />
-          <MyPageVideoComponent />
+          {videos.content.map((data: DataType) => {
+            const uniqueKey = uuidv4();
+            return <MyPageVideoComponent data={data} key={uniqueKey} />;
+          })}
         </div>
       )}
     </div>

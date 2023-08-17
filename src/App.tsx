@@ -60,11 +60,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/home/:id" element={<HomeDetail />} />
+            <Route path="/home/:videoId" element={<HomeDetail />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/upload" element={accessToken ? <Upload /> : <SignIn />} />
             <Route path="/mypage" element={accessToken ? <MyPage /> : <SignIn />} />
-            {/* <Route path="/mypage/:username" element={<MyPage />} /> */}
+            <Route path="/mypage/:memberId" element={<MyPage />} />
             <Route path="/mypage/detail" element={<MyPageDetail />} />
             {/* <Route path="/signin" element={<SignIn />} /> */}
             <Route path="/signup" element={<SignUp />} />

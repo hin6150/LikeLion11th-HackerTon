@@ -231,6 +231,7 @@ export const SearchTabModal = () => {
           css={css`
             font-size: 2.8rem;
           `}
+          onClick={() => {}}
         />
       ) : (
         <BsSoundwave
