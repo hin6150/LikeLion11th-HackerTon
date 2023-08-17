@@ -3,23 +3,43 @@ import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import { ButtonBox, InputBoxForm } from '../login/components';
+import { Article, ButtonBox, ErrorDescription, InputBoxForm } from '../login/components';
 import theme from '../../styles/theme';
-import { FilterCheckBox, UploadModal } from './components';
+import { FilterCheckBox, TextAreaForm, UploadModal } from './components';
 import { useUploadVideoMutation } from '../../store/memberApi';
 import { selectUser } from '../../store/userSlice';
+
+const isEmptyValue = (value: string) => {
+  if (!value.length) {
+    return true;
+  }
+  return false;
+};
 
 const Upload = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isOpen, setIsOpen] = useState(true);
+  const [inputHashTag, setInputHashTag] = useState('');
+  const [hashTags, setHashTags] = useState<string[]>([]);
 
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    clearErrors,
+    formState: { errors },
+  } = useForm({ mode: 'onChange' });
 
-  const titleProps = register('title', { required: '제목을 입력해주세요' });
-  const descriptionProps = register('videoDetail', { required: '상세정보를 입력해주세요' });
-  const tagProps = register('hashTag', { required: '#태그를 입력해주세요' });
-  const videoCategoryProps = register('videoCategory', {});
-  const ageCategoryProps = register('ageCategory', {});
+  const validateHashTag = () => {
+    return hashTags.length > 0 || '하나 이상의 해시태그를 입력하세요.';
+  };
+  const validateCategory = (array: string[]) => {
+    return array.length > 0 || '하나 이상의 카테고리를 선택하세요.';
+  };
+
+  const hashTagProps = register('hashTag', { validate: validateHashTag });
+  const videoCategoryProps = register('videoCategory', { validate: validateCategory });
+  const ageCategoryProps = register('ageCategory', { validate: validateCategory });
 
   const { accessToken } = useSelector(selectUser);
 
@@ -30,7 +50,8 @@ const Upload = () => {
       alert('동영상을 업로드 해주세요.');
       return;
     }
-    const { title, videoDetail, videoCategory, ageCategory, hashTag } = data;
+
+    const { title, videoDetail, videoCategory, ageCategory } = data;
     console.log(data);
     try {
       const response = await postVideo({
@@ -38,7 +59,7 @@ const Upload = () => {
         videoDetail,
         videoCategory,
         ageCategory,
-        hashTag,
+        hashTag: hashTags,
         accessToken,
         file,
       });
@@ -46,6 +67,68 @@ const Upload = () => {
     } catch (e) {
       console.log(e);
     }
+  };
+  // https://velog.io/@reasonz/라이브러리-없이-React로-해시태그-구현하기-feat.-버그와의-싸움
+
+  const addHashTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const allowedCommand = ['Comma', 'Enter', 'Space', 'NumpadEnter'];
+    if (!allowedCommand.includes(e.code)) return;
+
+    if (hashTags.length >= 10) {
+      alert('해시태그는 최대 10개까지 등록할 수 있습니다.');
+      return;
+    }
+
+    if (isEmptyValue(e.currentTarget.value.trim())) {
+      setInputHashTag('');
+      return;
+    }
+
+    let newHashTag = e.currentTarget.value.trim();
+    const regExp = /[{}/?.;:|)*~`!^\-_+<>@#$%&\\=('""]/g;
+    if (regExp.test(newHashTag)) {
+      newHashTag = newHashTag.replace(regExp, '');
+    }
+    if (newHashTag.includes(',')) {
+      newHashTag = newHashTag.split(',').join('');
+    }
+
+    if (isEmptyValue(newHashTag)) return;
+
+    setHashTags((prevHashTags): string[] => {
+      return Array.from(new Set([...prevHashTags, newHashTag]));
+    });
+
+    setInputHashTag('');
+    clearErrors('hashTag');
+  };
+
+  const keyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === 'Backspace' && isEmptyValue(e.currentTarget.value)) {
+      // 백스페이스 키를 눌렀고 입력 값이 비어있다면 배열의 마지막 요소를 지우기
+      setHashTags((prevHashTags): string[] => {
+        const updatedHashTags = [...prevHashTags];
+        updatedHashTags.pop(); // 배열의 마지막 요소를 제거
+        return updatedHashTags;
+      });
+      return;
+    }
+
+    if (e.code !== 'Enter' && e.code !== 'NumpadEnter') return;
+    e.preventDefault();
+
+    const regExp = /^[a-z|A-Z|가-힣|ㄱ-ㅎ|ㅏ-ㅣ|0-9| \t|]+$/g;
+    if (!regExp.test(e.currentTarget.value)) {
+      setInputHashTag('');
+    }
+  };
+
+  const changeHashTagInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputHashTag(e.currentTarget.value);
+  };
+
+  const handleRemoveHashTag = (tagToRemove: string) => {
+    setHashTags((prevHashTags) => prevHashTags.filter((tag) => tag !== tagToRemove));
   };
 
   return (
@@ -122,29 +205,94 @@ const Upload = () => {
           `}
         >
           <h1>기본정보</h1>
-          <InputBoxForm placeholder="제목을 입력해 주세요." register={titleProps} />
-          <textarea
-            name={descriptionProps.name}
-            ref={descriptionProps.ref}
-            onBlur={descriptionProps.onBlur}
-            placeholder="상세정보를 입력해주세요"
-            css={css`
-              ${theme.Typography.Body2}
-              background-color: ${theme.Gray[50]};
-              border-radius: 0.8rem;
-              padding: 1.6rem;
-              resize: none;
-              height: 16rem;
-              border: 2px solid ${theme.Gray[50]};
-              outline: none;
-              &:focus {
-                border: 2px solid ${theme.Colors.Primary};
-              }
-            `}
-          />
-          <InputBoxForm placeholder="#태그를 입력해 주세요." register={tagProps} />
+          <Article>
+            <InputBoxForm
+              placeholder="제목을 입력해주세요."
+              register={register('title', { required: '제목을 입력해주세요' })}
+            />
+            {(errors?.title || !getValues('title')) && (
+              <ErrorDescription text={errors?.title?.message} />
+            )}
+          </Article>
+
+          <Article>
+            <TextAreaForm
+              placeholder="상세정보를 입력해주세요."
+              register={register('videoDetail', { required: '상세정보를 입력해주세요' })}
+            />
+            {(errors?.videoDetail || !getValues('videoDetail')) && (
+              <ErrorDescription text={errors?.videoDetail?.message} />
+            )}
+          </Article>
+
+          <Article>
+            <div
+              css={css`
+                padding: 1.6rem;
+                background-color: ${theme.Gray[50]};
+                border-radius: 0.8rem;
+                box-sizing: border-box;
+                border: 2px solid ${theme.Gray[50]};
+                transition: border-color 0.3s;
+                &:focus-within {
+                  border-color: ${theme.Colors.Primary};
+                }
+              `}
+            >
+              <div
+                css={css`
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 0.4rem;
+                `}
+              >
+                {hashTags.length > 0 &&
+                  hashTags.map((hashTag) => {
+                    return (
+                      <div
+                        role="presentation"
+                        key={hashTag}
+                        css={css`
+                          padding: 0.8rem;
+                          border-radius: 0.8rem;
+                          background-color: ${theme.Colors.Primary};
+                          color: white;
+                          ${theme.Typography.PreTitle}
+                          cursor: pointer;
+                          &:hover {
+                          }
+                        `}
+                        onClick={() => handleRemoveHashTag(hashTag)}
+                      >
+                        #{hashTag}
+                      </div>
+                    );
+                  })}
+              </div>
+
+              <input
+                name={hashTagProps.name}
+                ref={hashTagProps.ref}
+                onChange={changeHashTagInput}
+                css={css`
+                  margin-top: 0.4rem;
+
+                  width: 100%;
+                  background-color: transparent;
+                  ${theme.Typography.Body2}
+                `}
+                value={inputHashTag}
+                onKeyUp={addHashTag}
+                onKeyDown={keyDownHandler}
+                placeholder="#해시태그를 등록해보세요. (최대 10개)"
+              />
+            </div>
+            {errors?.hashTag && <ErrorDescription text={errors?.hashTag?.message} />}
+          </Article>
         </div>
+
         <hr />
+
         <div>
           <h2
             css={css`
@@ -183,8 +331,13 @@ const Upload = () => {
             describe="부동산, 금융 등의 제테크 정보들을 얻을 수 있어요"
             register={videoCategoryProps}
           />
+          {errors?.videoCategory && (
+            <ErrorDescription text={errors?.videoCategory?.message} category />
+          )}
         </div>
+
         <hr />
+
         <div>
           <h2
             css={css`
@@ -196,8 +349,10 @@ const Upload = () => {
           <FilterCheckBox id="youth" title="10대 이하" describe="" register={ageCategoryProps} />
           <FilterCheckBox id="adult" title="20대 ~ 40대" describe="" register={ageCategoryProps} />
           <FilterCheckBox id="oldMan" title="50대 이상" describe="" register={ageCategoryProps} />
-          <ButtonBox text={isLoading ? '업로드 중' : '업로드 하기'} submit disabled={isLoading} />
+          {errors?.ageCategory && <ErrorDescription text={errors?.ageCategory?.message} category />}
         </div>
+
+        <ButtonBox text={isLoading ? '업로드 중' : '업로드 하기'} submit disabled={isLoading} />
       </form>
       {isOpen && <UploadModal setFile={setFile} setIsOpen={setIsOpen} />}
     </div>

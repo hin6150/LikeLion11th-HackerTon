@@ -105,6 +105,7 @@ export const InputBoxForm = ({
         border-radius: 0.8rem;
         box-sizing: border-box;
         border: 2px solid ${theme.Gray[50]};
+        transition: border-color 0.3s;
         &:focus {
           border: 2px solid ${theme.Colors.Primary};
         }
@@ -117,14 +118,14 @@ export const InputBoxForm = ({
 };
 InputBoxForm.defaultProps = { type: 'text' };
 
-export const ErrorDescription = ({ text }: any) => {
+export const ErrorDescription = ({ text, category }: any) => {
   return (
     <p
       css={css`
         ${theme.Typography.PreTitle}
         color: red;
         text-align: left;
-        margin-left: 1.6rem;
+        margin-left: ${category ? 0 : 1.6}rem;
         margin-bottom: 0.8rem;
       `}
     >

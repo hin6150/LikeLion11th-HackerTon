@@ -7,31 +7,27 @@ const createFormData = ({
   ageCategory,
   hashTag,
   file,
-  accessToken,
 }: {
   title: string;
   videoDetail: string;
-  videoCategory: string;
-  ageCategory: string;
-  hashTag: string;
-  accessToken: string;
+  videoCategory: string[];
+  ageCategory: string[];
+  hashTag: string[];
   file: File;
 }) => {
-  console.log(title, videoDetail, [hashTag], videoCategory, ageCategory, accessToken, file);
-
   const formData = new FormData();
   formData.append('file', file);
-  formData.append(
-    'videoUploadReqeustDto',
-    JSON.stringify({
-      title,
-      videoDetail,
-      videoState: 'standBy',
-      videoCategory: 'Leisure',
-      ageCategory: 'youth',
-      hashTag: [hashTag],
-    }),
-  );
+
+  formData.append('title', title);
+  formData.append('videoDetail', videoDetail);
+  formData.append('videoState', 'standBy');
+  formData.append('videoCategory', JSON.stringify(videoCategory));
+  formData.append('ageCategory', JSON.stringify(ageCategory));
+  formData.append('hashTag', JSON.stringify(hashTag));
+
+  // formData.forEach((value, key) => {
+  //   console.log(`${key}: ${value}`);
+  // });
 
   return formData;
 };
@@ -45,7 +41,6 @@ export const memberApi = createApi({
   endpoints: (builder) => ({
     getVideos: builder.query({
       query: ({ search: s }: { search?: string }) => {
-        // const { api_key, language } = arg;
         if (s) {
           return {
             url: 'video/search',
@@ -55,7 +50,6 @@ export const memberApi = createApi({
 
         return {
           url: 'video',
-          //   params: { api_key, language },
         };
       },
     }),
@@ -112,7 +106,7 @@ export const memberApi = createApi({
         method: 'POST',
         headers: {
           Authorization: `Bearer ${data.accessToken}`,
-          'Content-Type': 'multipart/form-data',
+          // 'Content-Type': 'multipart/form-data',
         },
         body: createFormData(data),
       }),
