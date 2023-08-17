@@ -83,6 +83,7 @@ const HeaderWebInputBox = () => {
   };
 
   const handleSearch = () => {
+    if (!inputValue) return;
     navigate(`/home/search/${inputValue}`);
   };
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -116,6 +117,8 @@ const HeaderWebInputBox = () => {
         `}
       />
       <BsSearch
+        role="presentation"
+        onClick={handleSearch}
         css={css`
           font-size: 28px;
           right: 80px;
@@ -123,12 +126,10 @@ const HeaderWebInputBox = () => {
         `}
       />
       <BsSoundwave
-        role="presentation"
         css={css`
           font-size: 32px;
           margin-left: 24px;
         `}
-        onClick={handleSearch}
       />
     </div>
   );

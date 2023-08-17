@@ -190,6 +190,7 @@ export const SearchTabModal = () => {
   const navigate = useNavigate();
 
   const handleSearch = () => {
+    if (!inputValue) return;
     navigate(`/home/search/${inputValue}`);
     dispatch(closeModal());
   };
