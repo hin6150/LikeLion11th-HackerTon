@@ -44,8 +44,15 @@ export const memberApi = createApi({
 
   endpoints: (builder) => ({
     getVideos: builder.query({
-      query: () => {
+      query: ({ search: s }: { search?: string }) => {
         // const { api_key, language } = arg;
+        if (s) {
+          return {
+            url: 'video/search',
+            params: { s },
+          };
+        }
+
         return {
           url: 'video',
           //   params: { api_key, language },

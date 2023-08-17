@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import {
   BsChatDots,
   BsChatDotsFill,
@@ -15,7 +15,7 @@ import {
   BsSearch,
   BsSoundwave,
 } from 'react-icons/bs';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import theme from '../../styles/theme';
 import { openModal } from '../../store/modalSlice';
@@ -75,6 +75,22 @@ const HeaderWeb = ({ children }: ContainerType) => {
   );
 };
 const HeaderWebInputBox = () => {
+  const [inputValue, setInputValue] = useState('');
+  const navigate = useNavigate();
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleSearch = () => {
+    navigate(`/home/search/${inputValue}`);
+  };
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <div
       css={css`
@@ -87,6 +103,10 @@ const HeaderWebInputBox = () => {
     >
       <input
         placeholder="검색어를 입력하세요."
+        type="text"
+        value={inputValue}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyPress}
         css={css`
           width: 100%;
           height: 48px;
@@ -103,10 +123,12 @@ const HeaderWebInputBox = () => {
         `}
       />
       <BsSoundwave
+        role="presentation"
         css={css`
           font-size: 32px;
           margin-left: 24px;
         `}
+        onClick={handleSearch}
       />
     </div>
   );

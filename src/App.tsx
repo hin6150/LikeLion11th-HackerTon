@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import './App.css';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Home from './components/home/Home';
 import MyPage from './components/mypage/MyPage';
@@ -54,26 +54,25 @@ function App() {
 
   return (
     <div className="App">
-      <BrowserRouter>
-        <Header />
-        {!isLoading ? (
-          <Routes>
-            <Route path="/" element={<Navigate to="/home" />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/home/:videoId" element={<HomeDetail />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/upload" element={accessToken ? <Upload /> : <SignIn />} />
-            <Route path="/mypage" element={accessToken ? <MyPage /> : <SignIn />} />
-            <Route path="/mypage/:memberId" element={<MyPage />} />
-            <Route path="/mypage/detail" element={<MyPageDetail />} />
-            {/* <Route path="/signin" element={<SignIn />} /> */}
-            <Route path="/signup" element={<SignUp />} />
-          </Routes>
-        ) : (
-          <div />
-        )}
-        <Footer />
-      </BrowserRouter>
+      <Header />
+      {!isLoading ? (
+        <Routes>
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/home/search/:search" element={<Home />} />
+          <Route path="/home/:videoId" element={<HomeDetail />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/upload" element={accessToken ? <Upload /> : <SignIn />} />
+          <Route path="/mypage" element={accessToken ? <MyPage /> : <SignIn />} />
+          <Route path="/mypage/:memberId" element={<MyPage />} />
+          <Route path="/mypage/detail" element={<MyPageDetail />} />
+          {/* <Route path="/signin" element={<SignIn />} /> */}
+          <Route path="/signup" element={<SignUp />} />
+        </Routes>
+      ) : (
+        <div />
+      )}
+      <Footer />
     </div>
   );
 }

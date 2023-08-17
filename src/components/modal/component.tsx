@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import React, { ReactNode, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { BsArrowLeft, BsChat, BsSearch, BsSoundwave, BsXLg } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 import theme from '../../styles/theme';
 import { closeModal } from '../../store/modalSlice';
 import { ContainerType } from '../../types/type';
@@ -180,12 +181,24 @@ export const FilterTabModal = () => {
 export const SearchTabModal = () => {
   const [inputValue, setInputValue] = useState('');
 
-  const handleInputChange = (event: any) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   const isValueExist = inputValue !== '';
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    navigate(`/home/search/${inputValue}`);
+    dispatch(closeModal());
+  };
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <div
       css={css`
@@ -213,6 +226,7 @@ export const SearchTabModal = () => {
         type="text"
         value={inputValue}
         onChange={handleInputChange}
+        onKeyDown={handleKeyPress}
         css={css`
           flex: 1;
           height: 32px;
@@ -231,7 +245,8 @@ export const SearchTabModal = () => {
           css={css`
             font-size: 2.8rem;
           `}
-          onClick={() => {}}
+          role="presentation"
+          onClick={handleSearch}
         />
       ) : (
         <BsSoundwave
