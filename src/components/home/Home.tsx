@@ -2,13 +2,22 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { HomeGridContainer, VideoContainer, VideoFrame, VideoInfo } from './components';
 import { useGetVideosQuery } from '../../store/memberApi';
 import { DataType } from '../../types/type';
+import { selectFliter } from '../../store/filterSlice';
 
 const Home = () => {
   const { search } = useParams();
-  const { data: videos, isLoading, isError } = useGetVideosQuery({ search });
+  const { ageCategory, videoCategory } = useSelector(selectFliter);
+  console.log('ageCategory:', ageCategory);
+  console.log('videoCategory:', videoCategory);
+  const {
+    data: videos,
+    isLoading,
+    isError,
+  } = useGetVideosQuery({ search, ageCategory, videoCategory });
 
   if (isLoading) return <div>Loading...</div>;
 

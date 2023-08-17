@@ -1,12 +1,16 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import React, { ReactNode, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BsArrowLeft, BsChat, BsSearch, BsSoundwave, BsXLg } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import theme from '../../styles/theme';
 import { closeModal } from '../../store/modalSlice';
 import { ContainerType } from '../../types/type';
+import { ButtonBox } from '../login/components';
+import { FilterCheckBox } from '../upload/components';
+import { selectFliter, setFliter } from '../../store/filterSlice';
 
 export const ModalContainer = ({ children }: { children: ReactNode }) => {
   return (
@@ -35,46 +39,6 @@ export const Overlay = ({ onClick }: { onClick: React.MouseEventHandler<HTMLDivE
       `}
       onClick={onClick}
     />
-  );
-};
-
-export const FilterList = ({ title, describe }: { title: string; describe: string }) => {
-  return (
-    <div
-      css={css`
-        position: relative;
-        margin: 1.6rem 0;
-      `}
-    >
-      <h2
-        css={css`
-          ${theme.Typography.Small1}
-          margin-bottom: 4px;
-        `}
-      >
-        {title}
-      </h2>
-      <p
-        css={css`
-          ${theme.Typography.Small2}
-          color: ${theme.Gray[500]};
-        `}
-      >
-        {describe}
-      </p>
-      <input
-        type="checkbox"
-        css={css`
-          position: absolute;
-          right: 0;
-          top: 0;
-          width: 20px;
-          height: 20px;
-          border-radius: 4px;
-          border: 1px solid ${theme.Gray[400]};
-        `}
-      />
-    </div>
   );
 };
 
@@ -129,51 +93,125 @@ export const UpperBar = ({ title }: { title: string }) => {
 };
 
 export const FilterTabModal = () => {
+  const dispatch = useDispatch();
+  const { ageCategory, videoCategory } = useSelector(selectFliter);
+  const { register, handleSubmit } = useForm({
+    defaultValues: { videoCategory: [], ageCategory: [] },
+  });
+
+  const videoCategoryProps = register('videoCategory', {});
+  const ageCategoryProps = register('ageCategory', {});
+
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    dispatch(setFliter({ ageCategory: data.ageCategory, videoCategory: data.videoCategory }));
+    dispatch(closeModal());
+  };
+
+  const handleReset = () => {
+    dispatch(setFliter({ ageCategory: [], videoCategory: [] }));
+    dispatch(closeModal());
+  };
+
   return (
     <TabContainer>
-      <UpperBar title="필터" />
-      <hr />
-      <div
-        css={css`
-          margin: 1.6rem;
-        `}
-      >
-        <h2
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <UpperBar title="필터" />
+        <hr />
+        <div
           css={css`
-            ${theme.Typography.Body2}
+            margin: 1.6rem;
           `}
         >
-          분야별
-        </h2>
-        <FilterList title="생활지식" describe="실생활에서 사용하는 간단한 지식에 대한 강의에요" />
-        <FilterList title="여가" describe="다양한 즐길거리에 대한 정보를 얻을 수 있어요" />
-        <FilterList
-          title="정부 지원 정보"
-          describe="지자체에서 제공하는 혜택 정보를 정리해둔 영상들이 있어요"
-        />
-        <FilterList
-          title="전자 기기"
-          describe="스마트폰, 무인주문기계 등 여러 전자기기의 정보를 얻을 수 있어요"
-        />
-        <FilterList title="자산" describe="부동산, 금융 등의 제테크 정보들을 얻을 수 있어요" />
-      </div>
-      <hr />
-      <div
-        css={css`
-          margin: 1.6rem;
-        `}
-      >
-        <h2
+          <h2
+            css={css`
+              ${theme.Typography.Body2}
+            `}
+          >
+            분야별
+          </h2>
+          <FilterCheckBox
+            title="생활지식"
+            id="lifeKnowledge"
+            describe="실생활에서 사용하는 간단한 지식에 대한 강의에요"
+            register={videoCategoryProps}
+            checked={videoCategory.includes('lifeKnowledge')}
+          />
+          <FilterCheckBox
+            title="여가"
+            id="Leisure"
+            describe="다양한 즐길거리에 대한 정보를 얻을 수 있어요"
+            register={videoCategoryProps}
+            checked={videoCategory.includes('Leisure')}
+          />
+          <FilterCheckBox
+            title="정부 지원 정보"
+            id="GovernmentSupportInformation"
+            describe="지자체에서 제공하는 혜택 정보를 정리해둔 영상들이 있어요"
+            register={videoCategoryProps}
+            checked={videoCategory.includes('GovernmentSupportInformation')}
+          />
+          <FilterCheckBox
+            title="전자 기기"
+            id="Electronics"
+            describe="스마트폰, 무인주문기계 등 여러 전자기기의 정보를 얻을 수 있어요"
+            register={videoCategoryProps}
+            checked={videoCategory.includes('Electronics')}
+          />
+          <FilterCheckBox
+            title="자산"
+            id="asset"
+            describe="부동산, 금융 등의 제테크 정보들을 얻을 수 있어요"
+            register={videoCategoryProps}
+            checked={videoCategory.includes('asset')}
+          />
+        </div>
+        <hr />
+        <div
           css={css`
-            ${theme.Typography.Body2}
+            margin: 1.6rem;
           `}
         >
-          연령별
-        </h2>
-        <FilterList title="10대 이하" describe="" />
-        <FilterList title="20대 ~ 40대" describe="" />
-        <FilterList title="50대 이상" describe="" />
-      </div>
+          <h2
+            css={css`
+              ${theme.Typography.Body2}
+            `}
+          >
+            연령별
+          </h2>
+          <FilterCheckBox
+            id="youth"
+            title="10대 이하"
+            describe=""
+            register={ageCategoryProps}
+            checked={ageCategory.includes('youth')}
+          />
+          <FilterCheckBox
+            id="adult"
+            title="20대 ~ 40대"
+            describe=""
+            register={ageCategoryProps}
+            checked={ageCategory.includes('adult')}
+          />
+          <FilterCheckBox
+            id="oldMan"
+            title="50대 이상"
+            describe=""
+            register={ageCategoryProps}
+            checked={ageCategory.includes('oldMan')}
+          />
+        </div>
+        <div
+          css={css`
+            margin: 3.2rem 1.6rem;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 1.6rem;
+          `}
+        >
+          <ButtonBox text="필터 적용하기" submit />
+          <ButtonBox text="초기화" onClick={handleReset} />
+        </div>
+      </form>
     </TabContainer>
   );
 };

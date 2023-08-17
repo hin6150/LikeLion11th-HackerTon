@@ -4,18 +4,14 @@ export interface ContainerType {
   children: ReactNode;
 }
 
-export interface AgeCategoryType {
-  ageCategory: 'youth' | 'adult' | 'oldMan' | 'NULL';
-}
+export type AgeCategoryType = 'youth' | 'adult' | 'oldMan' | 'NULL';
 
-export interface ViedoCategoryType {
-  videoCategory:
-    | 'lifeKnowledge'
-    | 'Leisure'
-    | 'GovernmentSupportInformation'
-    | 'Electronics'
-    | 'asset';
-}
+export type ViedoCategoryType =
+  | 'lifeKnowledge'
+  | 'Leisure'
+  | 'GovernmentSupportInformation'
+  | 'Electronics'
+  | 'asset';
 
 export interface VideoStateType {
   videoState: 'standBy' | 'accept' | 'refuse';

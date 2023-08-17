@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { AgeCategoryType, ViedoCategoryType } from '../types/type';
 
 const createFormData = ({
   title,
@@ -40,7 +41,15 @@ export const memberApi = createApi({
 
   endpoints: (builder) => ({
     getVideos: builder.query({
-      query: ({ search: s }: { search?: string }) => {
+      query: ({
+        search: s,
+        videoCategory,
+        ageCategory,
+      }: {
+        search?: string;
+        videoCategory?: ViedoCategoryType[];
+        ageCategory?: AgeCategoryType[];
+      }) => {
         if (s) {
           return {
             url: 'video/search',
@@ -50,6 +59,10 @@ export const memberApi = createApi({
 
         return {
           url: 'video',
+          params: {
+            categories: videoCategory && videoCategory.length > 0 ? videoCategory?.join(',') : '',
+            ageCategories: ageCategory && ageCategory.length > 0 ? ageCategory?.join(',') : '',
+          },
         };
       },
     }),
