@@ -4,6 +4,7 @@ import './index.css';
 import { ThemeProvider } from '@emotion/react';
 import { Provider } from 'react-redux';
 import { CookiesProvider } from 'react-cookie';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import theme from './styles/theme';
@@ -17,9 +18,11 @@ root.render(
     <Provider store={store}>
       <CookiesProvider>
         <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <GlobalModal />
-          <App />
+          <BrowserRouter>
+            <GlobalStyle />
+            <GlobalModal />
+            <App />
+          </BrowserRouter>
         </ThemeProvider>
       </CookiesProvider>
     </Provider>

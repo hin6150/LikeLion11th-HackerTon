@@ -10,14 +10,28 @@ export const LoginContainer = ({ children }: ContainerType) => {
   return (
     <div
       css={css`
+        width: 100%;
+        height: 100%;
+        overflow: scroll;
         position: relative;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
       `}
     >
-      {children}
+      <div
+        css={css`
+          width: 100%;
+          margin: auto;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding-bottom: 9.6rem;
+          @media screen and (min-width: 1366px) {
+            padding-bottom: 0;
+          }
+        `}
+      >
+        {children}
+      </div>
     </div>
   );
 };
@@ -99,9 +113,10 @@ export const InputBoxForm = ({
         background-color: ${theme.Gray[50]};
         border-radius: 0.8rem;
         box-sizing: border-box;
+        border: 2px solid ${theme.Gray[50]};
+        transition: border-color 0.3s;
         &:focus {
-          border: 1px solid ${theme.Colors.Primary};
-          outline: none;
+          border: 2px solid ${theme.Colors.Primary};
         }
       `}
       name={register.name}
@@ -112,14 +127,15 @@ export const InputBoxForm = ({
 };
 InputBoxForm.defaultProps = { type: 'text' };
 
-export const ErrorDescription = ({ text }: any) => {
+export const ErrorDescription = ({ text, category }: any) => {
   return (
     <p
       css={css`
         ${theme.Typography.PreTitle}
         color: red;
         text-align: left;
-        margin-left: 1.6rem;
+        margin-left: ${category ? 0 : 1.6}rem;
+        margin-bottom: 0.8rem;
       `}
     >
       {text}

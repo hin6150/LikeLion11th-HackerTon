@@ -106,6 +106,7 @@ export const UserBoxContainer = ({ data }: { data: DataType }) => {
           ${theme.Typography.Body2};
         `}
       >
+        <p>이름</p>
         <p>{data.nickname}</p>
         {/* <p>이메일</p>
         <p>{data.nickname}</p> */}

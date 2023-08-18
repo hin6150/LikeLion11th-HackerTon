@@ -1,30 +1,64 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { BsHandThumbsDown, BsHandThumbsUp } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
+import { useParams } from 'react-router-dom';
 import theme from '../../styles/theme';
 import { HomeGridContainer, VideoContainer, VideoFrame, VideoInfo } from './components';
+import { useGetVideoQuery, useGetVideosQuery } from '../../store/memberApi';
+import { DataType } from '../../types/type';
 
 const HomeDetail = () => {
-  const repeatedVideos = Array.from({ length: 10 });
+  const { videoId } = useParams();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [videoId]);
+
+  // useGetVideosQuery는 컴포넌트 내에서 호출되는 경우에도 매 렌더링마다 새로운 함수가 생성될 수 있습니다.
+  const {
+    data: getVideosQuery,
+    isLoading: isLoadingVideos,
+    isError: isErrorVideos,
+  } = useGetVideosQuery({});
+  const {
+    data: getVideoQuery,
+    isLoading: isLoadingVideo,
+    isError: isErrorVideo,
+  } = useGetVideoQuery(videoId);
+
+  // useCallback을 사용하여 함수 메모이제이션
+  const getVideos = useCallback(() => {
+    return getVideosQuery;
+  }, [getVideosQuery]);
+
+  const getVideo = useCallback((): DataType => {
+    return getVideoQuery;
+  }, [getVideoQuery]);
+
+  // useMemo를 사용하여 계산된 값을 메모이제이션
+  const videos = useMemo(() => getVideos(), [getVideos]);
+  const video = useMemo(() => getVideo(), [getVideo]);
+
+  if (isLoadingVideos || isLoadingVideo) return <div>Loading...</div>;
+  if (isErrorVideos || isErrorVideo) return <div>Error loading videos</div>;
   return (
     <div
       css={css`
         text-align: left;
+        padding-bottom: 9.6rem;
       `}
     >
       <div
         css={css`
-          width: 100%;
-          height: 50vw;
-          background-color: ${theme.Gray[300]};
-          @media screen and (min-width: 768px) {
-            height: 40vw;
+          @media screen and (min-width: 1366px) {
+            height: 70vh;
           }
         `}
-      />
+      >
+        <VideoFrame videoFileName={video.videoFileName} />
+      </div>
       <div
         css={css`
           margin: 1.6rem;
@@ -38,18 +72,18 @@ const HomeDetail = () => {
             ${theme.Typography.Header3}
           `}
         >
-          영상 제목
+          {video.videoTitle}
         </h2>
-        <div
+
+        <p
           css={css`
-            display: flex;
             ${theme.Typography.Body2}
-            color: ${theme.Gray[500]};
           `}
         >
-          <p>조회수 · 시간</p>
-          <p>...더보기</p>
-        </div>
+          조회수 · 시간
+        </p>
+
+        <p>{video.videoDetail}</p>
 
         <div
           css={css`
@@ -73,7 +107,7 @@ const HomeDetail = () => {
                 background-color: ${theme.Gray[200]};
               `}
             />
-            <p>올린 사람 정보</p>
+            <p>{video.nickname}</p>
           </div>
           <div
             css={css`
@@ -96,12 +130,13 @@ const HomeDetail = () => {
         관련된 동영상 강의
       </p>
       <HomeGridContainer>
-        {repeatedVideos.map(() => {
+        {videos?.content.map((data: DataType) => {
           const uniqueKey = uuidv4();
+          if (data.videoId === Number(videoId)) return null;
           return (
-            <VideoContainer key={uniqueKey} id={uniqueKey}>
-              <VideoFrame />
-              <VideoInfo title="영상제목" author="영상작성자" view={10} uploadDate={new Date()} />
+            <VideoContainer key={uniqueKey} id={data.videoId}>
+              <VideoFrame videoFileName={data.videoFileName} preview />
+              <VideoInfo data={data} />
             </VideoContainer>
           );
         })}

@@ -1,33 +1,41 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { HomeGridContainer, VideoContainer, VideoFrame, VideoInfo } from './components';
 import { useGetVideosQuery } from '../../store/memberApi';
+import { DataType } from '../../types/type';
+import { selectFliter } from '../../store/filterSlice';
 
 const Home = () => {
-  const repeatedVideos = Array.from({ length: 10 });
-  const { data: videos, isLoading, isError } = useGetVideosQuery({}); // API 슬라이스의 훅을 사용합니다.
+  const { search } = useParams();
+  const { ageCategory, videoCategory } = useSelector(selectFliter);
+  const {
+    data: videos,
+    isLoading,
+    isError,
+  } = useGetVideosQuery({ search, ageCategory, videoCategory });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  if (isLoading) return <div>Loading...</div>;
 
-  if (isError) {
-    return <div>Error loading videos</div>;
-  }
-  console.log(videos);
+  if (isError) return <div>Error loading videos</div>;
 
   return (
     <HomeGridContainer>
-      {repeatedVideos.map(() => {
-        const uniqueKey = uuidv4();
-        return (
-          <VideoContainer key={uniqueKey} id={uniqueKey}>
-            <VideoFrame />
-            <VideoInfo title="영상제목" author="영상작성자" view={10} uploadDate={new Date()} />
-          </VideoContainer>
-        );
-      })}
+      {videos.numberOfElements !== 0 ? (
+        videos.content.map((data: DataType) => {
+          const uniqueKey = uuidv4();
+          return (
+            <VideoContainer key={uniqueKey} id={data.videoId}>
+              <VideoFrame videoFileName={data.videoFileName} preview />
+              <VideoInfo data={data} />
+            </VideoContainer>
+          );
+        })
+      ) : (
+        <div>조건에 해당하는 동영상이 없습니다.</div>
+      )}
     </HomeGridContainer>
   );
 };
