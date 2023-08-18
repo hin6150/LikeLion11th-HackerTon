@@ -3,14 +3,19 @@ import { css } from '@emotion/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { BsSend } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
+import { useSelector } from 'react-redux';
 import theme from '../../styles/theme';
-import { ChatBox, ChatHistory, ChatImageBox, ChatInputContainer } from './components';
+import { ChatBox, ChatHistory, ChatInputContainer } from './components';
 import { usePostChatMutation } from '../../store/memberApi';
+import { selectUser } from '../../store/userSlice';
+import { VideoContainer, VideoFrame, VideoInfo } from '../home/components';
+import { DataType } from '../../types/type';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
+  const { accessToken } = useSelector(selectUser);
   const [messageList, setMessageList] = useState<
-    Array<{ type: 'gpt' | 'user'; message: string; video?: [] }>
+    Array<{ type: 'gpt' | 'user'; message: string; video?: DataType[] }>
   >([
     {
       type: 'gpt',
@@ -45,7 +50,7 @@ const Chat = () => {
     setMessage('');
 
     try {
-      const response = await postChat({ chatGptReq: message });
+      const response = await postChat({ chatGptReq: message, accessToken });
 
       if ('data' in response) {
         const responseData = response.data;
@@ -105,10 +110,15 @@ const Chat = () => {
               `}
             >
               <ChatBox type={data.type}>{data.message}</ChatBox>
-              {data.video && data.video.length > 0 ? <ChatImageBox /> : null}
-              {(data.video?.length || index !== 0) && data.type === 'gpt' ? (
+              {data.video && data.video.length > 0 ? (
+                <VideoContainer id={data.video[0].videoId}>
+                  <VideoFrame videoFileName={data.video[0].videoFileName} preview mobileVideo />
+                  <VideoInfo data={data.video[0]} />
+                </VideoContainer>
+              ) : null}
+              {(data.video?.length === 0 || index !== 0) && data.type === 'gpt' ? (
                 <ChatBox type={data.type}>
-                  요청하신 내용에 해당하는 해시태그를 가진 동영상이 없어요 !
+                  요청하신 내용에 해당하는 해시태그를 가진 동영상이 없어요!
                 </ChatBox>
               ) : null}
             </div>

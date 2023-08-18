@@ -112,7 +112,13 @@ const SignIn = () => {
         <CheckBox id="keepLogin" text="로그인 상태 유지" />
 
         <ButtonBox text={isLoading ? '로그인 중' : '로그인'} submit disabled={isLoading} />
-        <ButtonBox kakao text="카카오로 로그인" />
+        <ButtonBox
+          kakao
+          text="카카오로 로그인"
+          onClick={() => {
+            alert('소셜 로그인은 미지원입니다.');
+          }}
+        />
         <LoginToRegister />
       </form>
     </LoginContainer>

@@ -136,7 +136,7 @@ const HomeDetail = () => {
           if (data.videoId === Number(videoId)) return null;
           return (
             <VideoContainer key={uniqueKey} id={data.videoId}>
-              <VideoFrame videoFileName={data.videoFileName} />
+              <VideoFrame videoFileName={data.videoFileName} preview />
               <VideoInfo data={data} />
             </VideoContainer>
           );

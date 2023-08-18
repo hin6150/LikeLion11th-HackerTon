@@ -242,7 +242,7 @@ const Upload = () => {
                 margin-bottom: 1.6rem;
               `}
             />
-            <ButtonBox text="동영상 업로드." onClick={() => setIsOpen(true)} />
+            <ButtonBox text="동영상 업로드" onClick={() => setIsOpen(true)} />
           </>
         )}
       </div>
