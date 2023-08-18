@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import theme from '../../styles/theme';
 import { MyPageVideoComponent, TextBoxContainer, UserBoxContainer } from './components';
 import { VideoContainer, VideoFrame, VideoInfo } from '../home/components';
-import { useGetMyVideosQuery } from '../../store/memberApi';
+import { useGetMemberQuery, useGetMyVideosQuery } from '../../store/memberApi';
 import { selectUser } from '../../store/userSlice';
 import { DataType } from '../../types/type';
 
@@ -16,6 +16,11 @@ const MyPage = () => {
   const navigate = useNavigate();
   const { accessToken } = useSelector(selectUser);
 
+  const {
+    data: member,
+    isLoading: isLoadingMember,
+    isError: isErrorMember,
+  } = useGetMemberQuery({ accessToken });
   const { data: videos, isLoading, isError } = useGetMyVideosQuery({ accessToken, memberId });
 
   const [isWeb, setIsWeb] = useState(window.innerWidth >= 1366);
@@ -34,13 +39,15 @@ const MyPage = () => {
     };
   }, [navigate, videos]);
 
-  if (isLoading) {
+  if (isLoading || isLoadingMember) {
     return <div>Loading...</div>;
   }
 
-  if (isError) {
+  if (isError || isErrorMember) {
     return <div>Error loading videos</div>;
   }
+
+  console.log(videos);
 
   return (
     <div
@@ -50,7 +57,13 @@ const MyPage = () => {
         height: 100%;
       `}
     >
-      <UserBoxContainer data={videos.content[0]} />
+      <UserBoxContainer
+        member={
+          memberId
+            ? { nickname: videos.content[0].nickName, username: videos.content[0].username }
+            : member
+        }
+      />
       <TextBoxContainer>
         <p>업로드한 동영상 강의</p>
         <Link to="/mypage/detail">
@@ -58,6 +71,8 @@ const MyPage = () => {
             css={css`
               ${theme.Typography.PreTitle}
               color: ${theme.Colors.Primary};
+              text-decoration: underline;
+              display: ${memberId && 'none'};
             `}
           >
             상세보기
@@ -80,7 +95,7 @@ const MyPage = () => {
             const uniqueKey = uuidv4();
             return (
               <VideoContainer key={uniqueKey} id={data.videoId}>
-                <VideoFrame videoFileName={data.videoFileName} />
+                <VideoFrame videoFileName={data.videoFileName} preview />
                 <VideoInfo data={data} />
               </VideoContainer>
             );

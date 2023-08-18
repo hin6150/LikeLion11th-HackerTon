@@ -15,7 +15,7 @@ const Chat = () => {
     {
       type: 'gpt',
       message:
-        '안녕하세요 당신의 검색을 도와드리는 000입니다.\n현재는 50자 이내로 답변하고 있습니다.',
+        '안녕하세요 당신의 검색을 도와드리는 디지털 구명보트입니다.\n현재는 50자 이내로 답변하고 있습니다.\n 저는 10개까지 대화를 기억 할 수 있어요!\n 궁금하신 내용이 있으면 무엇이든 물어보세요 ~',
     },
   ]);
   const [postChat, { isLoading, isError }] = usePostChatMutation();
@@ -93,7 +93,7 @@ const Chat = () => {
         `}
         ref={chatContainerRef}
       >
-        {messageList.map((data) => {
+        {messageList.map((data, index) => {
           const uniqueKey = uuidv4();
           return (
             <div
@@ -106,6 +106,11 @@ const Chat = () => {
             >
               <ChatBox type={data.type}>{data.message}</ChatBox>
               {data.video && data.video.length > 0 ? <ChatImageBox /> : null}
+              {(data.video?.length || index !== 0) && data.type === 'gpt' ? (
+                <ChatBox type={data.type}>
+                  요청하신 내용에 해당하는 해시태그를 가진 동영상이 없어요 !
+                </ChatBox>
+              ) : null}
             </div>
           );
         })}

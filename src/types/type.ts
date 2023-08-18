@@ -27,5 +27,9 @@ export interface DataType {
   videoTitle: string;
   nickname: string;
   memberId: number;
+  writer: string;
+  viewCount: number;
   hashTag: [{ hashTag: string }];
+  updatedAt: Date;
+  createdAt: Date;
 }

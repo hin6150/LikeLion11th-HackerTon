@@ -4,11 +4,26 @@ import React from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { UserDetailVideoList } from './components';
+import { useGetMyVideosQuery } from '../../store/memberApi';
+import { selectUser } from '../../store/userSlice';
+import { DataType } from '../../types/type';
 
 const MyPageDetail = () => {
-  const repeatedVideos = Array.from({ length: 10 });
   const navigate = useNavigate();
+  const { accessToken } = useSelector(selectUser);
+
+  const { data: videos, isLoading, isError } = useGetMyVideosQuery({ accessToken });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading videos</div>;
+  }
+
   return (
     <div
       css={css`
@@ -70,9 +85,9 @@ const MyPageDetail = () => {
         </p>
       </div>
       <hr />
-      {repeatedVideos.map(() => {
+      {videos.content.map((data: DataType) => {
         const uniqueKey = uuidv4();
-        return <UserDetailVideoList key={uniqueKey} />;
+        return <UserDetailVideoList data={data} key={uniqueKey} />;
       })}
     </div>
   );

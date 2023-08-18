@@ -131,6 +131,14 @@ export const memberApi = createApi({
         params: { email },
       }),
     }),
+    getMember: builder.query({
+      query: ({ accessToken }) => ({
+        url: '/info',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -145,6 +153,7 @@ export const {
   useGetAccessTokenMutation,
   useUploadVideoMutation,
   useMailMutation,
+  useGetMemberQuery,
 } = memberApi;
 
 export default memberApi;

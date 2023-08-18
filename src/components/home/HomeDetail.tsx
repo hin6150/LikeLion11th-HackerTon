@@ -41,6 +41,7 @@ const HomeDetail = () => {
   const videos = useMemo(() => getVideos(), [getVideos]);
   const video = useMemo(() => getVideo(), [getVideo]);
 
+  console.log(video);
   if (isLoadingVideos || isLoadingVideo) return <div>Loading...</div>;
   if (isErrorVideos || isErrorVideo) return <div>Error loading videos</div>;
   return (
@@ -80,7 +81,7 @@ const HomeDetail = () => {
             ${theme.Typography.Body2}
           `}
         >
-          조회수 · 시간
+          조회수: {video.viewCount} · 시간
         </p>
 
         <p>{video.videoDetail}</p>

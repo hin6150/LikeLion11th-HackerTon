@@ -31,9 +31,10 @@ export const VideoInfo = ({ data }: { data: DataType }) => {
 
   // 현재 시간을 Date 객체로 얻기
   const currentTime = new Date();
+  const DateObject = new Date(data.createdAt);
 
   // 두 시간 객체의 차이 계산 (밀리초 단위)
-  const timeDifference = currentTime.getTime() - new Date().getTime();
+  const timeDifference = currentTime.getTime() - DateObject.getTime();
 
   // 차이를 원하는 형식으로 변환 (예시: "2일 3시간 45분 전")
   const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
@@ -86,7 +87,9 @@ ${minutesDifference}분 전`;
             ${theme.Typography.Small2}
           `}
           onClick={handleProfile}
-        >{`${data.nickname} · 조회수 ${20}회 · ${timeDifferenceText}`}</h3>
+        >{`${data.nickname ? data.nickname : '닉네임'} · 조회수 ${
+          data.viewCount ? data.viewCount : '3'
+        }회 · ${timeDifferenceText}`}</h3>
       </div>
       <BsThreeDotsVertical
         css={css`
@@ -102,18 +105,22 @@ ${minutesDifference}분 전`;
 export const VideoFrame = ({
   videoFileName,
   singleVideo,
+  preview,
+  mobileVideo,
 }: {
   videoFileName: string;
   singleVideo?: boolean;
+  preview?: boolean;
+  mobileVideo?: boolean;
 }) => {
   const url = 'https://likelionvideo.s3.ap-northeast-2.amazonaws.com/';
   return (
     <div
       css={css`
         position: relative;
-        width: 100%;
+        width: ${mobileVideo ? 50 : 100}%;
         height: ${singleVideo ? '100%' : '32vh'};
-        margin: 0 auto;
+        margin: ${!mobileVideo && '0 auto'};
         background-color: ${theme.Gray[950]};
         object-fit: cover;
         border-radius: ${!singleVideo && 1.6}rem;
@@ -121,7 +128,7 @@ export const VideoFrame = ({
       `}
     >
       {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-      <video controls width="100%" height="100%">
+      <video controls={!preview} width="100%" height="100%">
         <source src={url + videoFileName} />
       </video>
     </div>
@@ -129,6 +136,8 @@ export const VideoFrame = ({
 };
 VideoFrame.defaultProps = {
   singleVideo: false,
+  preview: false,
+  mobileVideo: false,
 };
 
 export const HomeGridContainer = ({ children }: ContainerType) => {
@@ -138,7 +147,7 @@ export const HomeGridContainer = ({ children }: ContainerType) => {
         display: grid;
         grid-template-columns: 1fr; /* 가로 크기에 맞추기 */
         grid-gap: 1.6rem;
-        padding-bottom: 0.8rem;
+        padding-bottom: 8rem;
         @media screen and (min-width: 768px) {
           grid-template-columns: repeat(2, 1fr);
           margin: 1.6rem;

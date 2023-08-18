@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { css } from '@emotion/react';
 import { HomeGridContainer, VideoContainer, VideoFrame, VideoInfo } from './components';
 import { useGetVideosQuery } from '../../store/memberApi';
 import { DataType } from '../../types/type';
@@ -15,9 +16,24 @@ const Home = () => {
     data: videos,
     isLoading,
     isError,
+    refetch,
   } = useGetVideosQuery({ search, ageCategory, videoCategory });
 
-  if (isLoading) return <div>Loading...</div>;
+  useEffect(() => {
+    refetch();
+  }, [search, ageCategory, videoCategory]); // 필요한 의존성 배열
+
+  if (isLoading)
+    return (
+      <div
+        css={css`
+          display: grid;
+          grid-template-columns: 3fr 1fr;
+        `}
+      >
+        Loading...
+      </div>
+    );
 
   if (isError) return <div>Error loading videos</div>;
 
@@ -28,7 +44,7 @@ const Home = () => {
           const uniqueKey = uuidv4();
           return (
             <VideoContainer key={uniqueKey} id={data.videoId}>
-              <VideoFrame videoFileName={data.videoFileName} />
+              <VideoFrame videoFileName={data.videoFileName} preview />
               <VideoInfo data={data} />
             </VideoContainer>
           );
