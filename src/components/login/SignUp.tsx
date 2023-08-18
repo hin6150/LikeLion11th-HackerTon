@@ -142,8 +142,9 @@ const SingUp = () => {
         css={css`
           display: flex;
           flex-direction: column;
-          gap: 0.8rem;
-          width: 50%;
+          gap: 1.2rem;
+          width: 80%;
+          height: 100%;
           min-width: 30rem;
         `}
       >

@@ -10,19 +10,28 @@ export const LoginContainer = ({ children }: ContainerType) => {
   return (
     <div
       css={css`
-        position: relative;
+        width: 100%;
         height: 100%;
-        margin: auto;
+        overflow: scroll;
+        position: relative;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-bottom: 9.6rem;
-        @media screen and (min-width: 1366px) {
-          padding-bottom: 0;
-        }
       `}
     >
-      {children}
+      <div
+        css={css`
+          width: 100%;
+          margin: auto;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding-bottom: 9.6rem;
+          @media screen and (min-width: 1366px) {
+            padding-bottom: 0;
+          }
+        `}
+      >
+        {children}
+      </div>
     </div>
   );
 };
