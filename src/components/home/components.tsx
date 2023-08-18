@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import React, { ReactNode } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import ReactPlayer from 'react-player';
 import theme from '../../styles/theme';
 import { ContainerType, DataType } from '../../types/type';
 
@@ -86,7 +87,7 @@ ${minutesDifference}분 전`;
             ${theme.Typography.Small2}
           `}
           onClick={handleProfile}
-        >{`${data.writer} · 조회수 ${20}회 · ${timeDifferenceText}`}</h3>
+        >{`${data.nickname} · 조회수 ${20}회 · ${timeDifferenceText}`}</h3>
       </div>
       <BsThreeDotsVertical
         css={css`
@@ -99,19 +100,38 @@ ${minutesDifference}분 전`;
   );
 };
 
-export const VideoFrame = () => {
+export const VideoFrame = ({
+  videoFileName,
+  preview,
+}: {
+  videoFileName: string;
+  preview?: boolean;
+}) => {
+  const url = 'https://likelionvideo.s3.ap-northeast-2.amazonaws.com/';
   return (
     <div
       css={css`
+        position: relative;
         width: 100%;
-        height: 24rem;
-        background-color: ${theme.Gray[400]};
-        @media screen and (min-width: 768px) {
-          border-radius: 2rem;
-        }
+        height: 100%;
+        margin: 0 auto;
+        background-color: ${theme.Gray[950]};
       `}
-    />
+    >
+      <ReactPlayer
+        url={url + videoFileName}
+        controls={!preview}
+        pip={!preview}
+        width="100%"
+        height="100%"
+        // light={preview} 이미지로 보이게 설정
+        // playIcon = null
+      />
+    </div>
   );
+};
+VideoFrame.defaultProps = {
+  preview: false,
 };
 
 export const HomeGridContainer = ({ children }: ContainerType) => {

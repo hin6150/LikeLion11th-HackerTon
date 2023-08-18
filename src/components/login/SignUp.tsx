@@ -125,141 +125,135 @@ const SingUp = () => {
   };
 
   return (
-    <div
-      css={css`
-        overflow: scroll;
-      `}
-    >
-      <LoginContainer>
-        <BsArrowLeft
-          css={css`
-            position: absolute;
-            top: 0.8rem;
-            left: 1.6rem;
-            font-size: 3.2rem;
-          `}
-          onClick={() => {
-            navigate(-1);
-          }}
-        />
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          css={css`
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            width: 50%;
-            min-width: 30rem;
-          `}
-        >
-          <LoginTitle title="회원가입" />
+    <LoginContainer>
+      <BsArrowLeft
+        css={css`
+          position: absolute;
+          top: 0.8rem;
+          left: 1.6rem;
+          font-size: 3.2rem;
+        `}
+        onClick={() => {
+          navigate(-1);
+        }}
+      />
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        css={css`
+          display: flex;
+          flex-direction: column;
+          gap: 0.8rem;
+          width: 50%;
+          min-width: 30rem;
+        `}
+      >
+        <LoginTitle title="회원가입" />
 
-          <Article>
+        <Article>
+          <InputBoxForm
+            placeholder="이름을 입력해 주세요."
+            register={register('name', {
+              required: '이름을 입력해주세요',
+            })}
+          />
+          {(errors?.name || !getValues('name')) && (
+            <ErrorDescription text={errors?.name?.message} />
+          )}
+        </Article>
+
+        <Article>
+          <InputBoxForm
+            placeholder="별명(닉네임)을 입력해 주세요."
+            register={register('nickname', {
+              required: '별명(닉네임)을 입력해주세요',
+            })}
+          />
+          {(errors?.name || !getValues('nickname')) && (
+            <ErrorDescription text={errors?.nickname?.message} />
+          )}
+        </Article>
+
+        <Article>
+          <GridBox>
             <InputBoxForm
-              placeholder="이름을 입력해 주세요."
-              register={register('name', {
-                required: '이름을 입력해주세요',
+              placeholder="이메일을 입력해주세요"
+              register={register('email', {
+                required: '이메일을 입력해주세요',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: '유효한 이메일 형식이 아닙니다.',
+                },
               })}
             />
-            {(errors?.name || !getValues('name')) && (
-              <ErrorDescription text={errors?.name?.message} />
-            )}
-          </Article>
-
-          <Article>
-            <InputBoxForm
-              placeholder="별명(닉네임)을 입력해 주세요."
-              register={register('nickname', {
-                required: '별명(닉네임)을 입력해주세요',
-              })}
+            <ButtonBox
+              text={
+                isLoadingMail
+                  ? '전송 중 . . .'
+                  : `${sentEmail ? '인증번호 재전송' : '인증번호 전송'}`
+              }
+              onClick={handleMail}
+              disabled={!!errors.email || !getValues('email') || isLoadingMail}
             />
-            {(errors?.name || !getValues('nickname')) && (
-              <ErrorDescription text={errors?.nickname?.message} />
-            )}
-          </Article>
+          </GridBox>
 
+          {(errors?.email || !getValues('email')) && (
+            <ErrorDescription text={errors?.email?.message} />
+          )}
+        </Article>
+
+        {sentEmail && (
           <Article>
             <GridBox>
               <InputBoxForm
-                placeholder="이메일을 입력해주세요"
-                register={register('email', {
-                  required: '이메일을 입력해주세요',
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: '유효한 이메일 형식이 아닙니다.',
-                  },
+                placeholder="인증번호를 입력해주세요"
+                register={register('certification', {
+                  required: '인증번호를 입력해주세요',
+                  pattern: { value: /^\d{6}$/, message: '올바른 형식으로 입력해주세요' },
                 })}
               />
               <ButtonBox
-                text={
-                  isLoadingMail
-                    ? '전송 중 . . .'
-                    : `${sentEmail ? '인증번호 재전송' : '인증번호 전송'}`
-                }
-                onClick={handleMail}
-                disabled={!!errors.email || !getValues('email') || isLoadingMail}
+                text="인증번호 확인"
+                onClick={handleCheckMail}
+                disabled={!!errors.certification || !watch('certification')}
               />
             </GridBox>
-
-            {(errors?.email || !getValues('email')) && (
-              <ErrorDescription text={errors?.email?.message} />
+            {(errors?.certification || !getValues('certification')) && (
+              <ErrorDescription text={errors?.certification?.message} />
             )}
           </Article>
-
-          {sentEmail && (
-            <Article>
-              <GridBox>
-                <InputBoxForm
-                  placeholder="인증번호를 입력해주세요"
-                  register={register('certification', {
-                    required: '인증번호를 입력해주세요',
-                    pattern: { value: /^\d{6}$/, message: '올바른 형식으로 입력해주세요' },
-                  })}
-                />
-                <ButtonBox
-                  text="인증번호 확인"
-                  onClick={handleCheckMail}
-                  disabled={!!errors.certification || !watch('certification')}
-                />
-              </GridBox>
-              {(errors?.certification || !getValues('certification')) && (
-                <ErrorDescription text={errors?.certification?.message} />
-              )}
-            </Article>
+        )}
+        <Article>
+          <InputBoxForm
+            type="password"
+            placeholder="비밀번호를 입력해주세요"
+            register={register('password', {
+              required: '비밀번호를 입력해주세요',
+              minLength: { value: 8, message: '8자리 이상 입력해주세요' },
+            })}
+          />
+          {(errors?.password || !getValues('password')) && (
+            <ErrorDescription text={errors?.password?.message} />
           )}
-          <Article>
-            <InputBoxForm
-              type="password"
-              placeholder="비밀번호를 입력해주세요"
-              register={register('password', {
-                required: '비밀번호를 입력해주세요',
-                minLength: { value: 8, message: '8자리 이상 입력해주세요' },
-              })}
-            />
-            {(errors?.password || !getValues('password')) && (
-              <ErrorDescription text={errors?.password?.message} />
-            )}
-          </Article>
+        </Article>
 
-          <Article>
-            <InputBoxForm
-              type="password"
-              placeholder="비밀번호를 한번 더 입력해주세요"
-              register={register('verifyPassword', {
-                required: '비밀번호를 한번 더 입력해주세요',
-                validate: validateVerifyPassword,
-              })}
-            />
-            {(errors?.verifyPassword || !getValues('verifyPassword')) && (
-              <ErrorDescription text={errors?.verifyPassword?.message} />
-            )}
-          </Article>
+        <Article>
+          <InputBoxForm
+            type="password"
+            placeholder="비밀번호를 한번 더 입력해주세요"
+            register={register('verifyPassword', {
+              required: '비밀번호를 한번 더 입력해주세요',
+              validate: validateVerifyPassword,
+            })}
+          />
+          {(errors?.verifyPassword || !getValues('verifyPassword')) && (
+            <ErrorDescription text={errors?.verifyPassword?.message} />
+          )}
+        </Article>
 
-          <CheckBox id="policy" text="개인정보 수집 및 이용에 동의합니다." />
-          <ButtonBox text="회원가입" submit disabled={isLoadingSignup} />
-        </form>
-      </LoginContainer>
-    </div>
+        <CheckBox id="policy" text="개인정보 수집 및 이용에 동의합니다." />
+        <ButtonBox text="회원가입" submit disabled={isLoadingSignup} />
+      </form>
+    </LoginContainer>
   );
 };
 

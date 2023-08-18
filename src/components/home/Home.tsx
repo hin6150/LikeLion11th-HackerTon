@@ -11,8 +11,6 @@ import { selectFliter } from '../../store/filterSlice';
 const Home = () => {
   const { search } = useParams();
   const { ageCategory, videoCategory } = useSelector(selectFliter);
-  console.log('ageCategory:', ageCategory);
-  console.log('videoCategory:', videoCategory);
   const {
     data: videos,
     isLoading,
@@ -23,8 +21,6 @@ const Home = () => {
 
   if (isError) return <div>Error loading videos</div>;
 
-  console.log(videos);
-
   return (
     <HomeGridContainer>
       {videos.numberOfElements !== 0 ? (
@@ -32,7 +28,7 @@ const Home = () => {
           const uniqueKey = uuidv4();
           return (
             <VideoContainer key={uniqueKey} id={data.videoId}>
-              <VideoFrame />
+              <VideoFrame videoFileName={data.videoFileName} preview />
               <VideoInfo data={data} />
             </VideoContainer>
           );

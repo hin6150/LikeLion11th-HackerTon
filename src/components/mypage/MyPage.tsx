@@ -80,7 +80,7 @@ const MyPage = () => {
             const uniqueKey = uuidv4();
             return (
               <VideoContainer key={uniqueKey} id={data.videoId}>
-                <VideoFrame />
+                <VideoFrame videoFileName={data.videoFileName} preview />
                 <VideoInfo data={data} />
               </VideoContainer>
             );

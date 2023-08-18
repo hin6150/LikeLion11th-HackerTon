@@ -283,9 +283,10 @@ const Upload = () => {
                 value={inputHashTag}
                 onKeyUp={addHashTag}
                 onKeyDown={keyDownHandler}
-                placeholder="#해시태그를 등록해보세요. 공백, 줄바꿈으로 입력 할 수 있습니다."
+                placeholder="#해시태그를 등록해보세요."
               />
             </div>
+
             {errors?.hashTag && <ErrorDescription text={errors?.hashTag?.message} />}
           </Article>
         </div>

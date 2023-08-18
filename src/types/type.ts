@@ -18,14 +18,14 @@ export interface VideoStateType {
 }
 
 export interface DataType {
+  videoId: number;
   ageCategory: AgeCategoryType;
   category: ViedoCategoryType;
-  hashTag: [{ hashTag: '집' }];
-  memberId: number;
   videoDetail: string;
   videoFileName: string;
-  videoId: number;
   videoState: VideoStateType;
   videoTitle: string;
-  writer: string;
+  nickname: string;
+  memberId: number;
+  hashTag: [{ hashTag: string }];
 }

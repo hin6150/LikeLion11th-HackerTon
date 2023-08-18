@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BsArrowLeft, BsChat, BsSearch, BsSoundwave, BsXLg } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
@@ -295,6 +295,13 @@ export const FilterTabModal = () => {
 
 export const SearchTabModal = () => {
   const [inputValue, setInputValue] = useState('');
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -338,6 +345,7 @@ export const SearchTabModal = () => {
         }}
       />
       <input
+        ref={inputRef}
         placeholder="검색어를 입력하세요."
         type="text"
         value={inputValue}

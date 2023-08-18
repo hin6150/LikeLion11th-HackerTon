@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { BsHandThumbsDown, BsHandThumbsUp } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 import { useParams } from 'react-router-dom';
@@ -11,6 +11,10 @@ import { DataType } from '../../types/type';
 
 const HomeDetail = () => {
   const { videoId } = useParams();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [videoId]);
 
   // useGetVideosQuery는 컴포넌트 내에서 호출되는 경우에도 매 렌더링마다 새로운 함수가 생성될 수 있습니다.
   const {
@@ -39,7 +43,6 @@ const HomeDetail = () => {
 
   if (isLoadingVideos || isLoadingVideo) return <div>Loading...</div>;
   if (isErrorVideos || isErrorVideo) return <div>Error loading videos</div>;
-
   return (
     <div
       css={css`
@@ -49,14 +52,13 @@ const HomeDetail = () => {
     >
       <div
         css={css`
-          width: 100%;
-          height: 50vw;
-          background-color: ${theme.Gray[300]};
-          @media screen and (min-width: 768px) {
-            height: 40vw;
+          @media screen and (min-width: 1366px) {
+            height: 70vh;
           }
         `}
-      />
+      >
+        <VideoFrame videoFileName={video.videoFileName} />
+      </div>
       <div
         css={css`
           margin: 1.6rem;
@@ -70,7 +72,7 @@ const HomeDetail = () => {
             ${theme.Typography.Header3}
           `}
         >
-          {getVideoQuery.videoTitle}
+          {video.videoTitle}
         </h2>
 
         <p
@@ -105,7 +107,7 @@ const HomeDetail = () => {
                 background-color: ${theme.Gray[200]};
               `}
             />
-            <p>{video.writer}</p>
+            <p>{video.nickname}</p>
           </div>
           <div
             css={css`
@@ -130,9 +132,10 @@ const HomeDetail = () => {
       <HomeGridContainer>
         {videos?.content.map((data: DataType) => {
           const uniqueKey = uuidv4();
+          if (data.videoId === Number(videoId)) return null;
           return (
             <VideoContainer key={uniqueKey} id={data.videoId}>
-              <VideoFrame />
+              <VideoFrame videoFileName={data.videoFileName} preview />
               <VideoInfo data={data} />
             </VideoContainer>
           );
