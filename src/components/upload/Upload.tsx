@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Article, ButtonBox, ErrorDescription, InputBoxForm } from '../login/components';
 import theme from '../../styles/theme';
 import { FilterRadioBox, TextAreaForm, UploadModal } from './components';
@@ -22,6 +23,8 @@ const Upload = () => {
   const [inputHashTag, setInputHashTag] = useState('');
   const [hashTags, setHashTags] = useState<string[]>([]);
 
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -31,7 +34,7 @@ const Upload = () => {
   } = useForm({ mode: 'onChange' });
 
   const validateHashTag = () => {
-    return hashTags.length > 0 || '하나 이상의 해시태그를 입력하세요.';
+    return hashTags.length > 0 || '하나 입력 후 엔터키나 스페이스 키를 눌러주세요.';
   };
 
   const hashTagProps = register('hashTag', { validate: validateHashTag });
@@ -42,7 +45,14 @@ const Upload = () => {
 
   const { accessToken } = useSelector(selectUser);
 
-  const [postVideo, { isLoading }] = useUploadVideoMutation();
+  const [postVideo, { isLoading, isSuccess }] = useUploadVideoMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate('/home');
+      alert('upload에 성공하였습니다!');
+    }
+  }, [isSuccess]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (!file) {
@@ -130,6 +140,36 @@ const Upload = () => {
     setHashTags((prevHashTags) => prevHashTags.filter((tag) => tag !== tagToRemove));
   };
 
+  const handleHashTagBlur = () => {
+    if (hashTags.length >= 10) {
+      alert('해시태그는 최대 10개까지 등록할 수 있습니다.');
+      return;
+    }
+
+    if (isEmptyValue(inputHashTag.trim())) {
+      setInputHashTag('');
+      return;
+    }
+
+    let newHashTag = inputHashTag.trim();
+    const regExp = /[{}/?.;:|)*~`!^\-_+<>@#$%&\\=('""]/g;
+    if (regExp.test(newHashTag)) {
+      newHashTag = newHashTag.replace(regExp, '');
+    }
+    if (newHashTag.includes(',')) {
+      newHashTag = newHashTag.split(',').join('');
+    }
+
+    if (isEmptyValue(newHashTag)) return;
+
+    setHashTags((prevHashTags): string[] => {
+      return Array.from(new Set([...prevHashTags, newHashTag]));
+    });
+
+    setInputHashTag('');
+    clearErrors('hashTag');
+  };
+
   return (
     <div
       css={css`
@@ -159,16 +199,36 @@ const Upload = () => {
             <div
               css={css`
                 display: flex;
+                justify-content: space-between;
+                margin: 0.8rem 0;
+                ${theme.Typography.Body2}
               `}
             >
-              <p>파일 이름: {file.name}</p>
-              <ButtonBox
-                text="다시 업로드 하기"
+              <p>
+                <span
+                  css={css`
+                    ${theme.Typography.SubTitle}
+                  `}
+                >
+                  파일 이름
+                </span>
+                : {file.name}
+              </p>
+              <div
+                role="presentation"
                 onClick={() => {
                   setFile(null);
                   setIsOpen(true);
                 }}
-              />
+                css={css`
+                  color: ${theme.Colors.Primary};
+                  text-decoration: underline;
+                  ${theme.Typography.SubTitle}
+                  cursor: pointer;
+                `}
+              >
+                다시 업로드 하기
+              </div>
             </div>
           </>
         ) : (
@@ -182,7 +242,7 @@ const Upload = () => {
                 margin-bottom: 1.6rem;
               `}
             />
-            <ButtonBox text="동영상을 올려주세요." onClick={() => setIsOpen(true)} />
+            <ButtonBox text="동영상 업로드." onClick={() => setIsOpen(true)} />
           </>
         )}
       </div>
@@ -203,7 +263,13 @@ const Upload = () => {
             gap: 0.8rem;
           `}
         >
-          <h1>기본정보</h1>
+          <h1
+            css={css`
+              ${theme.Typography.SubTitle}
+            `}
+          >
+            기본정보
+          </h1>
           <Article>
             <InputBoxForm
               placeholder="제목을 입력해주세요."
@@ -283,7 +349,8 @@ const Upload = () => {
                 value={inputHashTag}
                 onKeyUp={addHashTag}
                 onKeyDown={keyDownHandler}
-                placeholder="#해시태그를 등록해보세요."
+                onBlur={handleHashTagBlur}
+                placeholder="한 단어로 #해시태그를 등록해보세요."
               />
             </div>
 
@@ -296,7 +363,7 @@ const Upload = () => {
         <div>
           <h2
             css={css`
-              ${theme.Typography.Body2}
+              ${theme.Typography.SubTitle}
             `}
           >
             동영상의 분야를 알려주세요
@@ -341,7 +408,7 @@ const Upload = () => {
         <div>
           <h2
             css={css`
-              ${theme.Typography.Body2}
+              ${theme.Typography.SubTitle}
             `}
           >
             추천 연령대를 알려주세요

@@ -235,15 +235,15 @@ export const FilterRadioBox = ({
       >
         <h2
           css={css`
-            ${theme.Typography.Small1}
-            margin-bottom: 4px;
+            ${theme.Typography.Body2}
+            margin-bottom: 8px;
           `}
         >
           {title}
         </h2>
         <p
           css={css`
-            ${theme.Typography.Small2}
+            ${theme.Typography.Small1}
             color: ${theme.Gray[500]};
           `}
         >

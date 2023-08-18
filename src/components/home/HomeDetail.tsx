@@ -53,11 +53,11 @@ const HomeDetail = () => {
       <div
         css={css`
           @media screen and (min-width: 1366px) {
-            height: 70vh;
+            height: 72vh;
           }
         `}
       >
-        <VideoFrame videoFileName={video.videoFileName} />
+        <VideoFrame videoFileName={video.videoFileName} singleVideo />
       </div>
       <div
         css={css`
@@ -135,7 +135,7 @@ const HomeDetail = () => {
           if (data.videoId === Number(videoId)) return null;
           return (
             <VideoContainer key={uniqueKey} id={data.videoId}>
-              <VideoFrame videoFileName={data.videoFileName} preview />
+              <VideoFrame videoFileName={data.videoFileName} />
               <VideoInfo data={data} />
             </VideoContainer>
           );

@@ -155,7 +155,9 @@ export const Header = () => {
   return (
     <HeaderContainer>
       <HeaderMobile>
-        <img src="/logo.png" alt="logo" width="144px" />
+        <Link to="/home">
+          <img src="/logo.png" alt="logo" width="144px" />
+        </Link>
         <div
           css={css`
             display: flex;
@@ -208,7 +210,9 @@ export const Header = () => {
               dispatch(openModal({ modalType: 'FilterTabModal' }));
             }}
           />
-          <img src="/logo.png" alt="logo" width="178px" />
+          <Link to="/home">
+            <img src="/logo.png" alt="logo" width="178px" />
+          </Link>
         </div>
 
         <HeaderWebInputBox />

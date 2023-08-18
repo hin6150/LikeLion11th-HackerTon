@@ -99,7 +99,7 @@ const GlobalStyle = () => {
         }
         html {
           font-size: 62.5%;
-          font-family: 'Pretendard', 'Noto Sans KR', 'sans-serif';
+          font-family: 'Pretendard', 'Work Sans', 'Noto Sans KR', 'sans-serif';
           body {
             font-size: 1.6rem;
             font-style: normal;

@@ -28,7 +28,7 @@ const Home = () => {
           const uniqueKey = uuidv4();
           return (
             <VideoContainer key={uniqueKey} id={data.videoId}>
-              <VideoFrame videoFileName={data.videoFileName} preview />
+              <VideoFrame videoFileName={data.videoFileName} />
               <VideoInfo data={data} />
             </VideoContainer>
           );

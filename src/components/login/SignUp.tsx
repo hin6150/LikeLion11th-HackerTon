@@ -33,6 +33,9 @@ const SingUp = () => {
     formState: { errors },
   } = useForm({ mode: 'onChange' });
 
+  watch('email');
+  watch('certification');
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

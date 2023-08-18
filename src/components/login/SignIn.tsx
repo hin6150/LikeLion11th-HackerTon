@@ -112,7 +112,7 @@ const SignIn = () => {
         <CheckBox id="keepLogin" text="로그인 상태 유지" />
 
         <ButtonBox text={isLoading ? '로그인 중' : '로그인'} submit disabled={isLoading} />
-        <ButtonBox textColor="#3A1D1D" color="#f9e000" text="카카오로 로그인" />
+        <ButtonBox kakao text="카카오로 로그인" />
         <LoginToRegister />
       </form>
     </LoginContainer>

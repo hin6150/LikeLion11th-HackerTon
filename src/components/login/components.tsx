@@ -37,20 +37,20 @@ export const LoginContainer = ({ children }: ContainerType) => {
 };
 
 export const ButtonBox = ({
-  color,
-  textColor,
   text,
   submit,
   onClick,
   disabled,
+  kakao,
 }: {
-  color?: string;
-  textColor?: string;
   text: string;
   submit?: boolean;
   disabled?: boolean;
   onClick?: () => void;
+  kakao?: boolean;
 }) => {
+  const color = kakao ? '#f9e000' : `${theme.Colors.Primary}`;
+  const colorChange = kakao ? '#E0CA00' : `#3415C1`;
   return (
     <button
       disabled={disabled}
@@ -61,7 +61,11 @@ export const ButtonBox = ({
         background-color: ${disabled ? theme.Gray[400] : color};
         border-radius: 0.8rem;
         ${theme.Typography.ButtonText}
-        color: ${textColor};
+        color: ${kakao ? '#3A1D1D' : theme.Gray[50]};
+        transition: background-color 0.1s ease-in-out;
+        &:hover {
+          background-color: ${disabled ? theme.Gray[500] : colorChange};
+        }
       `}
       onClick={onClick}
     >
@@ -71,11 +75,10 @@ export const ButtonBox = ({
 };
 
 ButtonBox.defaultProps = {
-  color: `${theme.Colors.Primary}`,
-  textColor: `${theme.Gray[50]}`,
   submit: false,
   disabled: false,
   onClick: () => {},
+  kakao: false,
 };
 
 export const InputBox = ({ placeholder }: { placeholder: string }) => {
@@ -122,6 +125,7 @@ export const InputBoxForm = ({
       name={register.name}
       ref={register.ref}
       onChange={register.onChange}
+      onBlur={register.onBlur}
     />
   );
 };
@@ -194,6 +198,7 @@ export const LoginToRegister = () => {
           css={css`
             color: ${theme.Colors.Primary};
             margin-left: 0.8rem;
+            text-decoration: underline;
           `}
         >
           회원가입하기

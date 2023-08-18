@@ -86,10 +86,10 @@ export const memberApi = createApi({
       },
     }),
     postChat: builder.mutation({
-      query: (question) => ({
+      query: (chatGptReq) => ({
         url: 'chat/askChatGPT',
         method: 'POST',
-        body: question,
+        body: chatGptReq,
       }),
     }),
     login: builder.mutation({

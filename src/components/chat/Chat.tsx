@@ -45,7 +45,7 @@ const Chat = () => {
     setMessage('');
 
     try {
-      const response = await postChat(message);
+      const response = await postChat({ chatGptReq: message });
 
       if ('data' in response) {
         const responseData = response.data;

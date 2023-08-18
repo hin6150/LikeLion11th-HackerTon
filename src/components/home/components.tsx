@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import React, { ReactNode } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-import ReactPlayer from 'react-player';
 import theme from '../../styles/theme';
 import { ContainerType, DataType } from '../../types/type';
 
@@ -102,10 +101,10 @@ ${minutesDifference}분 전`;
 
 export const VideoFrame = ({
   videoFileName,
-  preview,
+  singleVideo,
 }: {
   videoFileName: string;
-  preview?: boolean;
+  singleVideo?: boolean;
 }) => {
   const url = 'https://likelionvideo.s3.ap-northeast-2.amazonaws.com/';
   return (
@@ -113,25 +112,23 @@ export const VideoFrame = ({
       css={css`
         position: relative;
         width: 100%;
-        height: 100%;
+        height: ${singleVideo ? '100%' : '32vh'};
         margin: 0 auto;
         background-color: ${theme.Gray[950]};
+        object-fit: cover;
+        border-radius: ${!singleVideo && 1.6}rem;
+        overflow: hidden;
       `}
     >
-      <ReactPlayer
-        url={url + videoFileName}
-        controls={!preview}
-        pip={!preview}
-        width="100%"
-        height="100%"
-        // light={preview} 이미지로 보이게 설정
-        // playIcon = null
-      />
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <video controls width="100%" height="100%">
+        <source src={url + videoFileName} />
+      </video>
     </div>
   );
 };
 VideoFrame.defaultProps = {
-  preview: false,
+  singleVideo: false,
 };
 
 export const HomeGridContainer = ({ children }: ContainerType) => {
@@ -139,7 +136,7 @@ export const HomeGridContainer = ({ children }: ContainerType) => {
     <div
       css={css`
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* 가로 크기에 맞추기 */
         grid-gap: 1.6rem;
         padding-bottom: 0.8rem;
         @media screen and (min-width: 768px) {
