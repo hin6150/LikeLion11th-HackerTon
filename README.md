@@ -1,46 +1,39 @@
-# Getting Started with Create React App
+# 멋쟁이사자처럼 11기 해커톤
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[멋쟁이사자처럼 대학 11주년 해커톤  - 이벤터스](https://event-us.kr/likelionuniv/event/65417?utm_source=mail&utm_medium=e_remind&utm_campaign=event_remind&utm_content=eventname_btn)
 
-## Available Scripts
+## 해커톤 주제 : **디지털 격차**
 
-In the project directory, you can run:
+아래 분야 중 우리 사회에서 디지털 격차가 발생되는 분야를 하나 선택하고, 연령, 성별, 학력, 정보, 지역, 소득 등 다양한 요인에 따른 디지털 격차를 해결 할 수 있는 서비스를 개발하세요.
 
-### `npm start`
+1. 이커머스
+2. 소셜미디어
+3. 공공 서비스
+4. 블록체인 온체인 서비스
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+🧑🏻 ”인터넷으로 많은 교육을 무료로 받을 수 있는데, 디지털 격차로 인해 이런 기회를 가지지 못하고 있어.”
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+🧑🏻 ”Chat-Bot과의 대화를 통해 남녀노소 누구나 손쉽게 자신이 원하는 정보를 찾을 수 있고,
+플랫폼에서 더빙, 자막과 같은 서비스를 제공해 누구나 격차없이 정보를 얻을 수 있는 플랫폼은 어떨까?”
 
-### `npm test`
+🧑🏻 ”봉사시간 지급을 통해 청년들이 정보 제공 영상 업로드를 유도해서 서비스 내부에서 컨텐츠를 확보하고 싶어”
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+작업 내용:
 
-### `npm run build`
+- BE 한분과 2인 작업 진행
+- 프로젝트 기획, 디자인, FE
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Figma 작업 진행
+    - 디자인 시스템 구현
+    - 8-Grid System
+    - https://www.figma.com/file/uBNQdY5Gco5DsuJ1RNMMuW/HackerTon_LikeLion?type=design&node-id=0%3A1&mode=design&t=9nMQ7A0uQQBBA7GR-1
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- FE
+    - React-Hook-Form을 통한 회원가입 유효성 검사
+    - RTK Query를 통한 BE와의 통신 작업
+    - RTK를 통한 전역 상태관리
+    - JWT 토큰을 사용해 유저 정보 관리
+    - 반응형 작업
+    
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+서버가 내려가서, 실행 모습은 보여드리기 어렵습니다!
